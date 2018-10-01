@@ -10,9 +10,16 @@ My code in "/src" folder.
 Configuration
 ------------
 
-#### Database
+### Database
+~~~
 /config/db.php
-
+~~~
+Default values
+~~~
+'dsn' => 'mysql:host=localhost;dbname=tournament',
+'username' => 'dbuser',
+'password' => 'dbpasswd',
+~~~
 
 INSTALLATION
 ------------
