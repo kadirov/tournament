@@ -7,11 +7,14 @@ $this->title = 'My Yii Application';
 <div class="site-index">
 
     <div class="jumbotron">
-        <h1>Congratulations!</h1>
+        <h1>Tournament (like FIFA world cup)</h1>
 
-        <p class="lead">You have successfully created your Yii-powered application.</p>
+        <p class="lead">
+            This example project of using design patterns like "Dependency Injection", "Stage", "Memento", "Builder", "ORM", "MVC" e.t.c.
+            I have tried to adhered to the principles SOLID
+        </p>
 
-        <p><a class="btn btn-lg btn-success" href="http://www.yiiframework.com">Get started with Yii</a></p>
+        <p><a class="btn btn-lg btn-primary" href="https://github.com/kadirov/tournament" target="_blank">See code on github</a></p>
     </div>
 
     <div class="body-content">
