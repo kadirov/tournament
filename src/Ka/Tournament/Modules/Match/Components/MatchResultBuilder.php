@@ -75,6 +75,45 @@ class MatchResultBuilder implements MatchResultBuilderInterface
     }
 
     /**
+     * @param MatchResultInterface|MatchResult $matchResult
+     * @param ScoreInterface $drawScore
+     * @return MatchResult
+     */
+    private function doAdditionalTimesAndPenalties(
+        MatchResultInterface $matchResult,
+        ScoreInterface $drawScore
+    ): MatchResultInterface {
+        $additionalTime = $this->build($matchResult->getTeam1(), $matchResult->getTeam1(), true);
+        $matchResult->setAdditionalScore($additionalTime->getFinalScore());
+
+        $finalScore = new Score();
+        $finalScore->setFirstTeamScore($this->sumOfFirstTeamScores($drawScore, $additionalTime->getFinalScore()));
+        $finalScore->setSecondTeamScore($this->sumOfSecondTeamScores($drawScore, $additionalTime->getFinalScore()));
+
+        $this->getScoreManager()->save($finalScore);
+
+        $matchResult->setFinalScore($finalScore);
+
+        if (!$additionalTime->isDraw()) {
+            return $matchResult;
+        }
+
+        return $this->doPenalties($matchResult);
+    }
+
+    /**
+     * @param MatchResultInterface|MatchResult $matchResult
+     * @return MatchResultInterface
+     */
+    private function doPenalties(MatchResultInterface $matchResult): MatchResultInterface
+    {
+        $penalties = $this->build($matchResult->getTeam1(), $matchResult->getTeam1(), false);
+        $matchResult->setPenaltiesScore($penalties->getFinalScore());
+
+        return $matchResult;
+    }
+
+    /**
      * Method return sum of first team scores
      *
      * @param \Ka\Tournament\Modules\Common\Interfaces\Match\Models\ScoreInterface $score1
@@ -145,58 +184,5 @@ class MatchResultBuilder implements MatchResultBuilderInterface
     private function getScoreManager(): ScoreManagerInterface
     {
         return $this->scoreManager;
-    }
-
-    /**
-     * @param MatchResultInterface|MatchResult $matchResult
-     * @param ScoreInterface $drawScore
-     * @return MatchResult
-     */
-    private function doAdditionalTimesAndPenalties(
-        MatchResultInterface $matchResult,
-        ScoreInterface $drawScore
-    ): MatchResultInterface {
-        $additionalTime = $this->build($matchResult->getTeam1(), $matchResult->getTeam1(), true);
-        $matchResult->setAdditionalScore($additionalTime->getFinalScore());
-
-        if (!$additionalTime->isDraw()) {
-            $finalScore = new Score();
-
-            $finalScore->setFirstTeamScore($this->sumOfFirstTeamScores($drawScore, $additionalTime->getFinalScore()));
-            $finalScore->setSecondTeamScore($this->sumOfSecondTeamScores($drawScore, $additionalTime->getFinalScore()));
-
-            $this->getScoreManager()->save($finalScore);
-
-            $matchResult->setFinalScore($finalScore);
-            return $matchResult;
-        }
-
-        return $this->doPenalties($matchResult, $drawScore, $additionalTime);
-
-    }
-
-    /**
-     * @param MatchResultInterface|MatchResult $matchResult
-     * @param ScoreInterface $drawScore
-     * @param MatchResultInterface $additionalTime
-     * @return MatchResultInterface
-     */
-    private function doPenalties(
-        MatchResultInterface $matchResult,
-        ScoreInterface $drawScore,
-        MatchResultInterface $additionalTime
-    ): MatchResultInterface {
-        $penalties = $this->build($matchResult->getTeam1(), $matchResult->getTeam1(), false);
-        $matchResult->setPenaltiesScore($penalties->getFinalScore());
-
-        $finalScore = new Score();
-
-        $finalScore->setFirstTeamScore($this->sumOfFirstTeamScores($drawScore, $additionalTime->getFinalScore()));
-        $finalScore->setSecondTeamScore($this->sumOfSecondTeamScores($drawScore, $additionalTime->getFinalScore()));
-
-        $this->getScoreManager()->save($finalScore);
-        $matchResult->setFinalScore($finalScore);
-
-        return $matchResult;
     }
 }

@@ -66,7 +66,7 @@ class MatchResult extends ActiveRecord implements MatchResultInterface
      */
     public function setAdditionalScore(ScoreInterface $score): self
     {
-        $this->additional_times_score = $score;
+        $this->additional_times_score = $score->getId();
         return $this;
     }
 
@@ -76,7 +76,7 @@ class MatchResult extends ActiveRecord implements MatchResultInterface
      */
     public function setPenaltiesScore(ScoreInterface $score): self
     {
-        $this->penalties_score = $score;
+        $this->penalties_score = $score->getId();
         return $this;
     }
 
@@ -201,6 +201,10 @@ class MatchResult extends ActiveRecord implements MatchResultInterface
      */
     public function isFirstTeamWon(): bool
     {
+        if ($this->getPenaltiesScore() !== null) {
+            return $this->getPenaltiesScore()->getFirstTeamScore() > $this->getPenaltiesScore()->getSecondTeamScore();
+        }
+
         return $this->getFinalScore()->getFirstTeamScore() > $this->getFinalScore()->getSecondTeamScore();
     }
 
@@ -211,6 +215,10 @@ class MatchResult extends ActiveRecord implements MatchResultInterface
      */
     public function isSecondTeamWon(): bool
     {
+        if ($this->getPenaltiesScore() !== null) {
+            return $this->getPenaltiesScore()->getFirstTeamScore() < $this->getPenaltiesScore()->getSecondTeamScore();
+        }
+
         return $this->getFinalScore()->getFirstTeamScore() < $this->getFinalScore()->getSecondTeamScore();
     }
 
@@ -221,6 +229,10 @@ class MatchResult extends ActiveRecord implements MatchResultInterface
      */
     public function isDraw(): bool
     {
+        if ($this->getPenaltiesScore() !== null) {
+            return false;
+        }
+
         return $this->getFinalScore()->getFirstTeamScore() === $this->getFinalScore()->getSecondTeamScore();
     }
 

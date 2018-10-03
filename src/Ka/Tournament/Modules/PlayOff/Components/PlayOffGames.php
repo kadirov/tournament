@@ -73,7 +73,6 @@ class PlayOffGames implements PlayOffGamesInterface
                 break;
 
             case TournamentState::PLAYOFF_16:
-                ;
                 foreach (PlayOff::find()->byLabels($this->getRound16Labels())->all() as $playOff) {
                     $teams = $playOff->getTeams();
 
@@ -166,6 +165,28 @@ class PlayOffGames implements PlayOffGamesInterface
     private function play(TeamInterface $team1, TeamInterface $team2): MatchResultInterface
     {
         $matchResult = $this->getMatchResultBuilder()->build($team1, $team2, false);
+
+        print $team1->getName() . '<br>';
+        print $team2->getName() . '<br>';
+        print $matchResult->getFinalScore()->getFirstTeamScore()  . ' : ';
+        print $matchResult->getFinalScore()->getSecondTeamScore()  . '<br>';
+
+        if ($matchResult->getAdditionalTimesScore()) {
+            print 'ad<br>';
+            print $matchResult->getAdditionalTimesScore()->getFirstTeamScore()  . ' : ';
+            print $matchResult->getAdditionalTimesScore()->getSecondTeamScore()  . '<br>';
+        }
+
+        if ($matchResult->getPenaltiesScore()) {
+            print 'pen<br>';
+            print $matchResult->getPenaltiesScore()->getFirstTeamScore()  . ' : ';
+            print $matchResult->getPenaltiesScore()->getSecondTeamScore()  . '<br>';
+        }
+
+        print '<br>';
+        print '---';
+        print '<br>';
+
         $this->getMatchResultManager()->save($matchResult);
         return $matchResult;
     }
@@ -262,7 +283,6 @@ class PlayOffGames implements PlayOffGamesInterface
     {
         if ($this->play($teams[0], $teams[1])->isFirstTeamWon()) {
             $this->addTeamByLabel($teams[0], $label);
-
         } else {
             $this->addTeamByLabel($teams[1], $label);
         }

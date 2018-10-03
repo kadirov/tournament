@@ -53,12 +53,29 @@ $lastPlayOff = '';
         <tr>
             <th width="1%"
                 class="<?= $mr->isFirstTeamWon() ? 'success' : '' ?> <?= $mr->isSecondTeamWon() ? 'danger' : '' ?>"></th>
-            <th width="48%"><?= $mr->getTeam1()->getName() ?></th>
+            <th width="48%">
+                <?= $mr->getTeam1()->getName() ?>
+                <span class="text-muted text-info" style="font-weight: normal">
+                    <?= $mr->getPenaltiesScore() === null ? '' : '<br>Penalties'?>
+                    <?= $mr->getAdditionalTimesScore() === null ? '' : '<br>Additional times result<br>Second time result' ?>
+                </span>
+            </th>
             <td>
                 <?= $mr->getFinalScore()->getFirstTeamScore() ?> :
                 <?= $mr->getFinalScore()->getSecondTeamScore() ?>
+                <span class="text-muted text-info" style="font-weight: normal">
+                    <?= $mr->getPenaltiesScore() === null ? '' : '<br>' . $mr->getPenaltiesScore()->getFirstTeamScore() . ' : ' . $mr->getPenaltiesScore()->getSecondTeamScore() ?>
+                    <?= $mr->getAdditionalTimesScore() === null ? '' : '<br>' . $mr->getAdditionalTimesScore()->getFirstTeamScore() . ' : ' . $mr->getAdditionalTimesScore()->getSecondTeamScore() ?>
+                    <?= $mr->getAdditionalTimesScore() === null ? '' : '<br>' . $mr->getSecondTimeScore()->getFirstTeamScore() . ' : ' . $mr->getSecondTimeScore()->getSecondTeamScore() ?>
+                </span>
             </td>
-            <th class="text-right"><?= $mr->getTeam2()->getName() ?></th>
+            <th class="text-right">
+                <?= $mr->getTeam2()->getName() ?>
+                <span class="text-muted text-info" style="font-weight: normal">
+                    <?= $mr->getPenaltiesScore() === null ? '' : '<br>Penalties' ?>
+                    <?= $mr->getAdditionalTimesScore() === null ? '' : '<br>Additional times result<br>Second time result' ?>
+                </span>
+            </th>
             <th width="1%"
                 class="<?= $mr->isSecondTeamWon() ? 'success' : '' ?> <?= $mr->isFirstTeamWon() ? 'danger' : '' ?>"></th>
         </tr>
