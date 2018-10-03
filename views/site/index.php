@@ -11,7 +11,7 @@ $this->title = 'My Yii Application';
 
         <p class="lead">
             This example project of using design patterns like "Dependency Injection", "Stage", "Memento", "Builder", "ORM", "MVC" e.t.c.
-            I have tried to adhered to the principles SOLID
+            I tried to adhere SOLID principles
         </p>
 
         <p><a class="btn btn-lg btn-primary" href="https://github.com/kadirov/tournament" target="_blank">See code on github</a></p>

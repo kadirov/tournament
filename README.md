@@ -2,7 +2,7 @@ Tournament like FIFA World CUP
 ------------
 
 This example project of using design patterns like "Dependency Injection", "Stage", "Memento", "Builder", "ORM", "MVC" e.t.c.
-I have tried to adhered to the principles SOLID
+I tried to adhere SOLID principles
 
 Framework: Yii2
 
