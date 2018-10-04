@@ -1,29 +1,15 @@
 <?php
+declare(strict_types=1);
 
 namespace Ka\Tournament\Modules\Group\Models\Query;
+
+use yii\db\ActiveQuery;
 
 /**
  * This is the ActiveQuery class for [[\Ka\Tournament\Modules\Group\Models\Group]].
  *
  * @see \Ka\Tournament\Modules\Group\Models\Group
  */
-class GroupQuery extends \yii\db\ActiveQuery
+class GroupQuery extends ActiveQuery
 {
-    /**
-     * {@inheritdoc}
-     * @return \Ka\Tournament\Modules\Group\Models\Group[]|array
-     */
-    public function all($db = null)
-    {
-        return parent::all($db);
-    }
-
-    /**
-     * {@inheritdoc}
-     * @return \Ka\Tournament\Modules\Group\Models\Group|array|null
-     */
-    public function one($db = null)
-    {
-        return parent::one($db);
-    }
 }

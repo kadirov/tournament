@@ -6,6 +6,11 @@ use Ka\Tournament\Modules\Common\Interfaces\Match\Models\ScoreInterface;
 use Ka\Tournament\Modules\Common\Interfaces\Match\ScoreManagerInterface;
 use Ka\Tournament\Modules\Match\Models\Score;
 
+/**
+ * Class ScoreManager
+ *
+ * @package Ka\Tournament\Modules\Match\Components
+ */
 class ScoreManager implements ScoreManagerInterface
 {
     /**

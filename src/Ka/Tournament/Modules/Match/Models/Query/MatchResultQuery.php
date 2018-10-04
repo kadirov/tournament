@@ -1,33 +1,25 @@
 <?php
+declare(strict_types=1);
 
 namespace Ka\Tournament\Modules\Match\Models\Query;
 
 use Ka\Tournament\Modules\Common\Interfaces\Group\Models\GroupInterface;
 use Ka\Tournament\Modules\Common\Interfaces\Team\Models\TeamInterface;
+use yii\db\ActiveQuery;
 
 /**
  * This is the ActiveQuery class for [[\Ka\Tournament\Modules\Match\Models\MatchResult]].
  *
  * @see \Ka\Tournament\Modules\Match\Models\MatchResult
  */
-class MatchResultQuery extends \yii\db\ActiveQuery
+class MatchResultQuery extends ActiveQuery
 {
     /**
-     * {@inheritdoc}
-     * @return \Ka\Tournament\Modules\Match\Models\MatchResult[]|array
+     * @return MatchResultQuery
      */
-    public function all($db = null)
+    public function orderedDesk(): self
     {
-        return parent::all($db);
-    }
-
-    /**
-     * {@inheritdoc}
-     * @return \Ka\Tournament\Modules\Match\Models\MatchResult|array|null
-     */
-    public function one($db = null)
-    {
-        return parent::one($db);
+        return $this->orderBy(['id' => SORT_DESC]);
     }
 
     /**
@@ -38,7 +30,7 @@ class MatchResultQuery extends \yii\db\ActiveQuery
     public function teamMatchesInGroup(TeamInterface $team, GroupInterface $group): self
     {
         $this->andWhere([
-            'group_id' => $group->getId(),
+            'group_id' => $group->getId()
         ]);
 
         $this->andWhere([
@@ -48,13 +40,5 @@ class MatchResultQuery extends \yii\db\ActiveQuery
         ]);
 
         return $this;
-    }
-
-    /**
-     * @return MatchResultQuery
-     */
-    public function orderedDesk(): self
-    {
-        return $this->orderBy(['id' => SORT_DESC]);
     }
 }

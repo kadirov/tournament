@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /**
  * @var GroupResultInterface[][] $allGroupsResults
@@ -8,10 +9,11 @@ use Ka\Tournament\Modules\Common\Interfaces\Group\Models\GroupResultInterface;
 use yii\helpers\Url;
 
 ?>
+
 <div class="group-default-index">
     <h1>Groups</h1>
     <?php
-    foreach ($allGroupsResults as $groupsResults):?>
+    foreach ($allGroupsResults as $groupsResults) : ?>
         <p>
             <?= isset($groupsResults[0]) ? 'Group: ' . $groupsResults[0]->getGroup()->getLabel() : '' ?>
         </p>
@@ -26,12 +28,15 @@ use yii\helpers\Url;
                 <th>Goal Difference</th>
                 <th>Points</th>
             </tr>
-            <?php foreach ($groupsResults as $groupResult): ?>
-                <tr class="<?= $groupResult->getGamesPlayed() === 3 && $groupResult->getPosition() <= 2 ? 'success' : '' ?>">
+            <?php foreach ($groupsResults as $groupResult) : ?>
+                <tr class="<?= $groupResult->getGamesPlayed() === 3 && $groupResult->getPosition() <= 2 ?
+                    'success' :
+                    ''
+                ?>">
                     <?php $urlToMatches = Url::to([
                         '/match/default/team-matches-in-group',
                         'teamId' => $groupResult->getTeam()->getId(),
-                        'groupId' => $groupResult->getGroup()->getId(),
+                        'groupId' => $groupResult->getGroup()->getId()
 
                     ]) ?>
                     <td><?= $groupResult->getPosition() ?></td>

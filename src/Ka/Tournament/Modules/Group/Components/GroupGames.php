@@ -9,19 +9,23 @@ use Ka\Tournament\Modules\Common\Interfaces\Match\MatchResultBuilderInterface;
 use Ka\Tournament\Modules\Common\Interfaces\Match\MatchResultManagerInterface;
 use Ka\Tournament\Modules\Common\Interfaces\Team\Models\TeamInterface;
 use Ka\Tournament\Modules\Common\Interfaces\Tournament\TournamentStateInterface;
+use LogicException;
 
+/**
+ * Class GroupGames
+ *
+ * @package Ka\Tournament\Modules\Group\Components
+ */
 class GroupGames implements GroupGamesInterface
 {
-    /**
-     * @var MatchResultBuilderInterface
-     */
-    private $matchResultBuilder;
-
     /**
      * @var GroupManagerInterface
      */
     private $groupManager;
-
+    /**
+     * @var MatchResultBuilderInterface
+     */
+    private $matchResultBuilder;
     /**
      * @var MatchResultManagerInterface
      */
@@ -33,8 +37,7 @@ class GroupGames implements GroupGamesInterface
      * @param MatchResultManagerInterface $matchResultManager
      * @param GroupManagerInterface $groupManager
      */
-    public function __construct
-    (
+    public function __construct(
         MatchResultBuilderInterface $matchResultBuilder,
         MatchResultManagerInterface $matchResultManager,
         GroupManagerInterface $groupManager
@@ -70,27 +73,9 @@ class GroupGames implements GroupGamesInterface
                     break;
 
                 default:
-                    throw new \LogicException('It is not group stage: ' . $tournamentState->getValue());
+                    throw new LogicException('It is not group stage: ' . $tournamentState->getValue());
             }
         }
-    }
-
-    /**
-     * @param TeamInterface $team1
-     * @param TeamInterface $team2
-     */
-    private function play(TeamInterface $team1, TeamInterface $team2): void
-    {
-        $matchResult = $this->getMatchResultBuilder()->build($team1, $team2);
-        $this->getMatchResultManager()->save($matchResult);
-    }
-
-    /**
-     * @return MatchResultManagerInterface
-     */
-    private function getMatchResultManager(): MatchResultManagerInterface
-    {
-        return $this->matchResultManager;
     }
 
     /**
@@ -107,5 +92,23 @@ class GroupGames implements GroupGamesInterface
     private function getMatchResultBuilder(): MatchResultBuilderInterface
     {
         return $this->matchResultBuilder;
+    }
+
+    /**
+     * @return MatchResultManagerInterface
+     */
+    private function getMatchResultManager(): MatchResultManagerInterface
+    {
+        return $this->matchResultManager;
+    }
+
+    /**
+     * @param TeamInterface $team1
+     * @param TeamInterface $team2
+     */
+    private function play(TeamInterface $team1, TeamInterface $team2): void
+    {
+        $matchResult = $this->getMatchResultBuilder()->build($team1, $team2);
+        $this->getMatchResultManager()->save($matchResult);
     }
 }

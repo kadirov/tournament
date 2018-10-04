@@ -7,6 +7,7 @@ use Ka\Tournament\Modules\Common\Interfaces\Group\GroupManagerInterface;
 use Ka\Tournament\Modules\Common\Interfaces\Group\Models\GroupInterface;
 use Ka\Tournament\Modules\Common\Interfaces\Team\Models\TeamInterface;
 use Ka\Tournament\Modules\Common\Interfaces\Team\TeamManagerInterface;
+use LogicException;
 
 /**
  * Class uses to define teams for groups
@@ -16,25 +17,21 @@ use Ka\Tournament\Modules\Common\Interfaces\Team\TeamManagerInterface;
 class DrawingGroup implements DrawingGroupInterface
 {
     /**
-     * @var TeamManagerInterface
-     */
-    private $teamManager;
-
-    /**
      * @var GroupManagerInterface
      */
     private $groupManager;
+    /**
+     * @var TeamManagerInterface
+     */
+    private $teamManager;
 
     /**
      * DrawingGroup constructor.
      * @param TeamManagerInterface $teamManager
      * @param GroupManagerInterface $groupManager
      */
-    public function __construct
-    (
-        TeamManagerInterface $teamManager,
-        GroupManagerInterface $groupManager
-    ) {
+    public function __construct(TeamManagerInterface $teamManager, GroupManagerInterface $groupManager)
+    {
         $this->teamManager = $teamManager;
         $this->groupManager = $groupManager;
     }
@@ -74,6 +71,20 @@ class DrawingGroup implements DrawingGroupInterface
     }
 
     /**
+     * @return GroupInterface[]|[]
+     */
+    private function getGroups(): array
+    {
+        $groups = $this->getGroupManager()->getAll();
+
+        if (empty($groups)) {
+            throw new LogicException('Groups not found!');
+        }
+
+        return $groups;
+    }
+
+    /**
      * @return TeamManagerInterface
      */
     private function getTeamManager(): TeamManagerInterface
@@ -89,23 +100,9 @@ class DrawingGroup implements DrawingGroupInterface
         $teams = $this->getTeamManager()->getAll();
 
         if (empty($teams)) {
-            throw new \LogicException('Teams not found!');
+            throw new LogicException('Teams not found!');
         }
 
         return $teams;
-    }
-
-    /**
-     * @return GroupInterface[]|[]
-     */
-    private function getGroups(): array
-    {
-        $groups = $this->getGroupManager()->getAll();
-
-        if (empty($groups)) {
-            throw new \LogicException('Groups not found!');
-        }
-
-        return $groups;
     }
 }

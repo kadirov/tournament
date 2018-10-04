@@ -13,38 +13,37 @@ use Ka\Tournament\Modules\Common\Interfaces\Tournament\TournamentInterface;
 use Ka\Tournament\Modules\Common\Interfaces\Tournament\TournamentStateInterface;
 use Ka\Tournament\Modules\Tournament\Components\States\DrawStage;
 
+/**
+ * Class Tournament
+ *
+ * @package Ka\Tournament\Modules\Tournament\Components
+ */
 class Tournament implements TournamentInterface
 {
-    /**
-     * @var TournamentStateInterface
-     */
-    private $state;
-
     /**
      * @var DrawingGroupInterface
      */
     private $drawingGroup;
-
     /**
      * @var GroupGamesInterface
      */
     private $groupGames;
-
     /**
      * @var MatchResultManagerInterface
      */
     private $matchResultManager;
-
-    /**
-     * @var ScoreManagerInterface
-     */
-    private $scoreManager;
-
     /**
      * @var PlayOffGamesInterface
      */
     private $playOffGames;
-
+    /**
+     * @var ScoreManagerInterface
+     */
+    private $scoreManager;
+    /**
+     * @var TournamentStateInterface
+     */
+    private $state;
     /**
      * @var TeamManagerInterface
      */
@@ -59,8 +58,7 @@ class Tournament implements TournamentInterface
      * @param TeamManagerInterface $teamManager
      * @param ScoreManagerInterface $scoreManager
      */
-    public function __construct
-    (
+    public function __construct(
         DrawingGroupInterface $drawingGroup,
         GroupGamesInterface $groupGames,
         PlayOffGamesInterface $playOffGames,
@@ -74,6 +72,18 @@ class Tournament implements TournamentInterface
         $this->scoreManager = $scoreManager;
         $this->playOffGames = $playOffGames;
         $this->teamManager = $teamManager;
+    }
+
+    /**
+     * @return TournamentStateInterface
+     */
+    public function getState(): TournamentStateInterface
+    {
+        if ($this->state === null) {
+            $this->state = new DrawStage();
+        }
+
+        return $this->state;
     }
 
     /**
@@ -111,47 +121,11 @@ class Tournament implements TournamentInterface
     }
 
     /**
-     * @return TournamentStateInterface
-     */
-    public function getState(): TournamentStateInterface
-    {
-        if ($this->state === null) {
-            $this->state = new DrawStage();
-        }
-
-        return $this->state;
-    }
-
-    /**
      * @param TournamentStateInterface $state
      */
     public function setState(TournamentStateInterface $state): void
     {
         $this->state = $state;
-    }
-
-    /**
-     * @return TeamManagerInterface
-     */
-    private function getTeamManager(): TeamManagerInterface
-    {
-        return $this->teamManager;
-    }
-
-    /**
-     * @return PlayOffGamesInterface
-     */
-    private function getPlayOffGames(): PlayOffGamesInterface
-    {
-        return $this->playOffGames;
-    }
-
-    /**
-     * @return GroupGamesInterface
-     */
-    private function getGroupGames(): GroupGamesInterface
-    {
-        return $this->groupGames;
     }
 
     /**
@@ -163,6 +137,14 @@ class Tournament implements TournamentInterface
     }
 
     /**
+     * @return GroupGamesInterface
+     */
+    private function getGroupGames(): GroupGamesInterface
+    {
+        return $this->groupGames;
+    }
+
+    /**
      * @return MatchResultManagerInterface
      */
     private function getMatchResultManager(): MatchResultManagerInterface
@@ -171,10 +153,26 @@ class Tournament implements TournamentInterface
     }
 
     /**
+     * @return PlayOffGamesInterface
+     */
+    private function getPlayOffGames(): PlayOffGamesInterface
+    {
+        return $this->playOffGames;
+    }
+
+    /**
      * @return ScoreManagerInterface
      */
     private function getScoreManager(): ScoreManagerInterface
     {
         return $this->scoreManager;
+    }
+
+    /**
+     * @return TeamManagerInterface
+     */
+    private function getTeamManager(): TeamManagerInterface
+    {
+        return $this->teamManager;
     }
 }

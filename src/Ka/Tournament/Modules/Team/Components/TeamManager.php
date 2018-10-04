@@ -6,25 +6,13 @@ use Ka\Tournament\Modules\Common\Interfaces\Team\Models\TeamInterface;
 use Ka\Tournament\Modules\Common\Interfaces\Team\TeamManagerInterface;
 use Ka\Tournament\Modules\Team\Models\Team;
 
+/**
+ * Class TeamManager
+ *
+ * @package Ka\Tournament\Modules\Team\Components
+ */
 class TeamManager implements TeamManagerInterface
 {
-    /**
-     * @return TeamInterface[]|array
-     */
-    public function getAll(): array
-    {
-        return Team::find()->all();
-    }
-
-    /**
-     * @param TeamInterface|Team $team
-     * @return bool
-     */
-    public function save(TeamInterface $team): bool
-    {
-        return $team->save();
-    }
-
     /**
      * Clear relations
      *
@@ -40,11 +28,28 @@ class TeamManager implements TeamManagerInterface
     }
 
     /**
+     * @return TeamInterface[]|array
+     */
+    public function getAll(): array
+    {
+        return Team::find()->all();
+    }
+
+    /**
      * Get Teams in PlayOff
      * @return TeamInterface[]
      */
     public function getTeamsInPlayOff(): array
     {
         return Team::find()->hasPlayOff()->all();
+    }
+
+    /**
+     * @param TeamInterface|Team $team
+     * @return bool
+     */
+    public function save(TeamInterface $team): bool
+    {
+        return $team->save();
     }
 }

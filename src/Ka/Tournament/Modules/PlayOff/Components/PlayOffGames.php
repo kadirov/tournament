@@ -15,7 +15,14 @@ use Ka\Tournament\Modules\Common\Interfaces\Tournament\TournamentStateInterface;
 use Ka\Tournament\Modules\Match\Components\MatchResultBuilder;
 use Ka\Tournament\Modules\Match\Components\MatchResultManager;
 use Ka\Tournament\Modules\PlayOff\Models\PlayOff;
+use LogicException;
+use RuntimeException;
 
+/**
+ * Class PlayOffGames
+ *
+ * @package Ka\Tournament\Modules\PlayOff\Components
+ */
 class PlayOffGames implements PlayOffGamesInterface
 {
     /**
@@ -45,8 +52,7 @@ class PlayOffGames implements PlayOffGamesInterface
      * @param TeamManagerInterface $teamManager
      * @param MatchResultManager $matchResultManager
      */
-    public function __construct
-    (
+    public function __construct(
         GroupManagerInterface $groupManager,
         MatchResultBuilder $matchResultBuilder,
         TeamManagerInterface $teamManager,
@@ -61,6 +67,10 @@ class PlayOffGames implements PlayOffGamesInterface
     /**
      * Play one round of group
      * @param TournamentStateInterface $tournamentState
+     * @throws \Exception
+     * @throws \Exception
+     * @throws \Exception
+     * @throws \Exception
      */
     public function playRound(TournamentStateInterface $tournamentState): void
     {
@@ -97,7 +107,7 @@ class PlayOffGames implements PlayOffGamesInterface
                             $label = PlayOffLabel::QUARTER_FINAL_EFGH2;
                             break;
                         default:
-                            throw new \LogicException('Unknown PlayOff pair');
+                            throw new LogicException('Unknown PlayOff pair');
                     }
 
                     $this->playAndAddWinnerToPlayOff($teams, $label);
@@ -120,7 +130,7 @@ class PlayOffGames implements PlayOffGamesInterface
                             break;
 
                         default:
-                            throw new \LogicException('Unknown PlayOff pair');
+                            throw new LogicException('Unknown PlayOff pair');
                     }
 
                     $this->playAndAddWinnerToPlayOff($teams, $label);
@@ -153,14 +163,114 @@ class PlayOffGames implements PlayOffGamesInterface
                 break;
 
             default:
-                throw new \LogicException('It is not playOff stage: ' . $tournamentState->getValue());
+                throw new LogicException('It is not playOff stage: ' . $tournamentState->getValue());
         }
+    }
+
+    /**
+     * @param TeamInterface $team
+     * @param string $label
+     */
+    private function addTeamByLabel(TeamInterface $team, string $label): void
+    {
+        $team->setPlayOff($this->findPlayOff($label));
+        $this->getTeamManager()->save($team);
+    }
+
+    /**
+     * @param string $label A constant of {@see PlayOffLabel}
+     * @see PlayOffLabel
+     * @return PlayOffInterface
+     */
+    private function findPlayOff(string $label): PlayOffInterface
+    {
+        $playOff = PlayOff::find()->byLabel($label)->one();
+
+        if ($playOff === null) {
+            throw new RuntimeException('PlayOff entity is not found. Do you have run migrations?');
+        }
+
+        return $playOff;
+    }
+
+    /**
+     * @return GroupManagerInterface
+     */
+    private function getGroupManager(): GroupManagerInterface
+    {
+        return $this->groupManager;
+    }
+
+    /**
+     * @return MatchResultBuilder
+     */
+    private function getMatchResultBuilder(): MatchResultBuilder
+    {
+        return $this->matchResultBuilder;
+    }
+
+    /**
+     * @return MatchResultManager
+     */
+    private function getMatchResultManager(): MatchResultManager
+    {
+        return $this->matchResultManager;
+    }
+
+    /**
+     * @return array
+     */
+    private function getQuarterLabels(): array
+    {
+        return [
+            PlayOffLabel::QUARTER_FINAL_ABCD1,
+            PlayOffLabel::QUARTER_FINAL_ABCD2,
+            PlayOffLabel::QUARTER_FINAL_EFGH1,
+            PlayOffLabel::QUARTER_FINAL_EFGH2
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private function getRound16Labels(): array
+    {
+        return [
+            PlayOffLabel::A1B2,
+            PlayOffLabel::A2B1,
+            PlayOffLabel::C1D2,
+            PlayOffLabel::C2D1,
+            PlayOffLabel::E1F2,
+            PlayOffLabel::E2F1,
+            PlayOffLabel::G1H2,
+            PlayOffLabel::G2H1
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private function getSemiFinalLabels(): array
+    {
+        return [
+            PlayOffLabel::SEMI_FINAL_1,
+            PlayOffLabel::SEMI_FINAL_2
+        ];
+    }
+
+    /**
+     * @return TeamManagerInterface
+     */
+    private function getTeamManager(): TeamManagerInterface
+    {
+        return $this->teamManager;
     }
 
     /**
      * @param TeamInterface $team1
      * @param TeamInterface $team2
      * @return MatchResultInterface
+     * @throws \Exception
      */
     private function play(TeamInterface $team1, TeamInterface $team2): MatchResultInterface
     {
@@ -168,19 +278,19 @@ class PlayOffGames implements PlayOffGamesInterface
 
         print $team1->getName() . '<br>';
         print $team2->getName() . '<br>';
-        print $matchResult->getFinalScore()->getFirstTeamScore()  . ' : ';
-        print $matchResult->getFinalScore()->getSecondTeamScore()  . '<br>';
+        print $matchResult->getFinalScore()->getFirstTeamScore() . ' : ';
+        print $matchResult->getFinalScore()->getSecondTeamScore() . '<br>';
 
         if ($matchResult->getAdditionalTimesScore()) {
             print 'ad<br>';
-            print $matchResult->getAdditionalTimesScore()->getFirstTeamScore()  . ' : ';
-            print $matchResult->getAdditionalTimesScore()->getSecondTeamScore()  . '<br>';
+            print $matchResult->getAdditionalTimesScore()->getFirstTeamScore() . ' : ';
+            print $matchResult->getAdditionalTimesScore()->getSecondTeamScore() . '<br>';
         }
 
         if ($matchResult->getPenaltiesScore()) {
             print 'pen<br>';
-            print $matchResult->getPenaltiesScore()->getFirstTeamScore()  . ' : ';
-            print $matchResult->getPenaltiesScore()->getSecondTeamScore()  . '<br>';
+            print $matchResult->getPenaltiesScore()->getFirstTeamScore() . ' : ';
+            print $matchResult->getPenaltiesScore()->getSecondTeamScore() . '<br>';
         }
 
         print '<br>';
@@ -191,6 +301,25 @@ class PlayOffGames implements PlayOffGamesInterface
         return $matchResult;
     }
 
+    /**
+     * @param array $teams
+     * @param string $label
+     * @return void
+     * @throws \Exception
+     * @throws \Exception
+     */
+    private function playAndAddWinnerToPlayOff(array $teams, string $label): void
+    {
+        if ($this->play($teams[0], $teams[1])->isFirstTeamWon()) {
+            $this->addTeamByLabel($teams[0], $label);
+        } else {
+            $this->addTeamByLabel($teams[1], $label);
+        }
+    }
+
+    /**
+     * @param GroupInterface $group
+     */
     private function prepareRound16(GroupInterface $group): void
     {
         foreach ($this->getGroupManager()->getGroupResults($group) as $gr) {
@@ -256,118 +385,5 @@ class PlayOffGames implements PlayOffGamesInterface
                     break;
             }
         }
-    }
-
-    /**
-     * @param string $label A constant of {@see PlayOffLabel}
-     * @see PlayOffLabel
-     * @return PlayOffInterface
-     */
-    private function findPlayOff(string $label): PlayOffInterface
-    {
-        $playOff = PlayOff::find()->byLabel($label)->one();
-
-        if ($playOff === null) {
-            throw new \RuntimeException('PlayOff entity is not found. Do you have run migrations?');
-        }
-
-        return $playOff;
-    }
-
-    /**
-     * @param array $teams
-     * @param string $label
-     * @return void
-     */
-    private function playAndAddWinnerToPlayOff(array $teams, string $label): void
-    {
-        if ($this->play($teams[0], $teams[1])->isFirstTeamWon()) {
-            $this->addTeamByLabel($teams[0], $label);
-        } else {
-            $this->addTeamByLabel($teams[1], $label);
-        }
-    }
-
-    /**
-     * @return array
-     */
-    private function getRound16Labels(): array
-    {
-        return [
-            PlayOffLabel::A1B2,
-            PlayOffLabel::A2B1,
-            PlayOffLabel::C1D2,
-            PlayOffLabel::C2D1,
-            PlayOffLabel::E1F2,
-            PlayOffLabel::E2F1,
-            PlayOffLabel::G1H2,
-            PlayOffLabel::G2H1,
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    private function getQuarterLabels(): array
-    {
-        return [
-            PlayOffLabel::QUARTER_FINAL_ABCD1,
-            PlayOffLabel::QUARTER_FINAL_ABCD2,
-            PlayOffLabel::QUARTER_FINAL_EFGH1,
-            PlayOffLabel::QUARTER_FINAL_EFGH2,
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    private function getSemiFinalLabels(): array
-    {
-        return [
-            PlayOffLabel::SEMI_FINAL_1,
-            PlayOffLabel::SEMI_FINAL_2,
-        ];
-    }
-
-    /**
-     * @param TeamInterface $team
-     * @param string $label
-     */
-    private function addTeamByLabel(TeamInterface $team, string $label): void
-    {
-        $team->setPlayOff($this->findPlayOff($label));
-        $this->getTeamManager()->save($team);
-    }
-
-    /**
-     * @return TeamManagerInterface
-     */
-    private function getTeamManager(): TeamManagerInterface
-    {
-        return $this->teamManager;
-    }
-
-    /**
-     * @return MatchResultBuilder
-     */
-    private function getMatchResultBuilder(): MatchResultBuilder
-    {
-        return $this->matchResultBuilder;
-    }
-
-    /**
-     * @return GroupManagerInterface
-     */
-    private function getGroupManager(): GroupManagerInterface
-    {
-        return $this->groupManager;
-    }
-
-    /**
-     * @return MatchResultManager
-     */
-    private function getMatchResultManager(): MatchResultManager
-    {
-        return $this->matchResultManager;
     }
 }

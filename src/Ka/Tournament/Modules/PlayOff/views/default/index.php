@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 use Ka\Tournament\Modules\Common\Constants\PlayOffLabel;
 use Ka\Tournament\Modules\Common\Interfaces\Team\Models\TeamInterface;
@@ -67,7 +68,7 @@ use Ka\Tournament\Modules\PlayOff\Helpers\PlayOffHelper;
                 <div class="col-sm-7">
                     <?php
                     $team = PlayOffHelper::find(PlayOffLabel::A1B2, $teams);
-                    print $team === null ? '' : $team->getName();
+                    print $team->getName();
                     ?>
                 </div>
                 <div class="col-sm-2 bg-success">3</div>

@@ -4,32 +4,21 @@ namespace Ka\Tournament\Modules\Common\Interfaces\Group\Models;
 
 use Ka\Tournament\Modules\Common\Interfaces\Team\Models\TeamInterface;
 
+/**
+ * Interface GroupResultInterface
+ * @package Ka\Tournament\Modules\Common\Interfaces\Group\Models
+ */
 interface GroupResultInterface
 {
     /**
-     * @return GroupInterface
+     * @return int
      */
-    public function getGroup(): GroupInterface;
-
-    /**
-     * @return TeamInterface
-     */
-    public function getTeam(): TeamInterface;
+    public function getGamesDrawn(): int;
 
     /**
      * @return int
      */
-    public function getPosition(): int;
-
-    /**
-     * @return int
-     */
-    public function getPoint(): int;
-
-    /**
-     * @return int
-     */
-    public function getGoalDifference(): int;
+    public function getGamesLost(): int;
 
     /**
      * @return int
@@ -44,10 +33,25 @@ interface GroupResultInterface
     /**
      * @return int
      */
-    public function getGamesDrawn(): int;
+    public function getGoalDifference(): int;
+
+    /**
+     * @return GroupInterface
+     */
+    public function getGroup(): GroupInterface;
 
     /**
      * @return int
      */
-    public function getGamesLost(): int;
+    public function getPoint(): int;
+
+    /**
+     * @return int
+     */
+    public function getPosition(): int;
+
+    /**
+     * @return TeamInterface
+     */
+    public function getTeam(): TeamInterface;
 }

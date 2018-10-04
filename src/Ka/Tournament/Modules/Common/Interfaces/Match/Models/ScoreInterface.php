@@ -1,9 +1,14 @@
 <?php
+declare(strict_types=1);
 
 namespace Ka\Tournament\Modules\Common\Interfaces\Match\Models;
 
 use Ka\Tournament\Modules\Common\Interfaces\Core\IdInterface;
 
+/**
+ * Interface ScoreInterface
+ * @package Ka\Tournament\Modules\Common\Interfaces\Match\Models
+ */
 interface ScoreInterface extends IdInterface
 {
     /**

@@ -4,6 +4,10 @@ namespace Ka\Tournament\Modules\Common\Interfaces\Group;
 
 use Ka\Tournament\Modules\Common\Interfaces\Tournament\TournamentStateInterface;
 
+/**
+ * Interface GroupGamesInterface
+ * @package Ka\Tournament\Modules\Common\Interfaces\Group
+ */
 interface GroupGamesInterface
 {
     /**

@@ -1,27 +1,23 @@
 <?php
+declare(strict_types=1);
 
 namespace Ka\Tournament\Modules\Match\Models;
 
 use Ka\Tournament\Modules\Common\Interfaces\Match\Models\ScoreInterface;
 use Ka\Tournament\Modules\Match\Models\Query\ScoreQuery;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "score".
  *
  * @property int $id
  * @property int $first_team_score
+ * @property int $firstTeamScore
+ * @property int $secondTeamScore
  * @property int $second_team_score
  */
-class Score extends \yii\db\ActiveRecord implements ScoreInterface
+class Score extends ActiveRecord implements ScoreInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    public static function tableName(): string
-    {
-        return 'score';
-    }
-
     /**
      * {@inheritdoc}
      * @return ScoreQuery the active query used by this AR class.
@@ -32,11 +28,23 @@ class Score extends \yii\db\ActiveRecord implements ScoreInterface
     }
 
     /**
-     * @return int
+     * {@inheritdoc}
      */
-    public function getId(): int
+    public static function tableName(): string
     {
-        return $this->id;
+        return 'score';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function attributeLabels(): array
+    {
+        return [
+            'id' => 'ID',
+            'first_team_score' => 'First Team Score',
+            'second_team_score' => 'Second Team Score'
+        ];
     }
 
     /**
@@ -50,6 +58,14 @@ class Score extends \yii\db\ActiveRecord implements ScoreInterface
     }
 
     /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
      * Score of second team
      *
      * @return int
@@ -57,6 +73,17 @@ class Score extends \yii\db\ActiveRecord implements ScoreInterface
     public function getSecondTeamScore(): int
     {
         return $this->second_team_score;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function rules(): array
+    {
+        return [
+            [['first_team_score', 'second_team_score'], 'required'],
+            [['first_team_score', 'second_team_score'], 'integer']
+        ];
     }
 
     /**
@@ -81,28 +108,5 @@ class Score extends \yii\db\ActiveRecord implements ScoreInterface
     {
         $this->second_team_score = $score;
         return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function rules(): array
-    {
-        return [
-            [['first_team_score', 'second_team_score'], 'required'],
-            [['first_team_score', 'second_team_score'], 'integer'],
-        ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function attributeLabels(): array
-    {
-        return [
-            'id' => 'ID',
-            'first_team_score' => 'First Team Score',
-            'second_team_score' => 'Second Team Score',
-        ];
     }
 }

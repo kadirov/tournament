@@ -5,6 +5,10 @@ namespace Ka\Tournament\Modules\Common\Interfaces\PlayOff\Models;
 use Ka\Tournament\Modules\Common\Interfaces\Core\IdInterface;
 use Ka\Tournament\Modules\Common\Interfaces\Team\Models\TeamInterface;
 
+/**
+ * Interface PlayOffInterface
+ * @package Ka\Tournament\Modules\Common\Interfaces\PlayOff\Models
+ */
 interface PlayOffInterface extends IdInterface
 {
     /**

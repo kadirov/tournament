@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ka\Tournament\Modules\PlayOff\Controllers;
 
@@ -22,12 +23,8 @@ class DefaultController extends Controller
      * @param Module $module
      * @param TeamManagerInterface $teamManager
      */
-    public function __construct
-    (
-        string $id,
-        Module $module,
-        TeamManagerInterface $teamManager
-    ) {
+    public function __construct(string $id, Module $module, TeamManagerInterface $teamManager)
+    {
         $this->teamManager = $teamManager;
         parent::__construct($id, $module);
     }
@@ -36,7 +33,7 @@ class DefaultController extends Controller
      * Renders the index view for the module
      * @return string
      */
-    public function actionIndex()
+    public function actionIndex(): string
     {
         return $this->render('index', ['teams' => $this->getTeamManager()->getTeamsInPlayOff()]);
     }

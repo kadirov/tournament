@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ka\Tournament\Modules\PlayOff\Models;
 
@@ -12,34 +13,37 @@ use yii\db\ActiveRecord;
  * This is the model class for table "playoff".
  *
  * @property int $id
+ * @property array|\Ka\Tournament\Modules\Common\Interfaces\Team\Models\TeamInterface[] $teams
  * @property string $label
  */
 class PlayOff extends ActiveRecord implements PlayOffInterface
 {
     /**
      * {@inheritdoc}
-     */
-    public static function tableName()
-    {
-        return 'playoff';
-    }
-
-    /**
-     * {@inheritdoc}
      * @return PlayoffQuery the active query used by this AR class.
      */
-    public static function find()
+    public static function find(): PlayoffQuery
     {
         return new PlayoffQuery(static::class);
     }
 
     /**
      * {@inheritdoc}
-     * @return TeamInterface[]|[]
      */
-    public function getTeams(): array
+    public static function tableName(): string
     {
-        return $this->hasMany(Team::class, ['playoff_id' => 'id'])->all();
+        return 'playoff';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function attributeLabels(): array
+    {
+        return [
+            'id' => 'ID',
+            'label' => 'Label'
+        ];
     }
 
     /**
@@ -60,22 +64,20 @@ class PlayOff extends ActiveRecord implements PlayOffInterface
 
     /**
      * {@inheritdoc}
+     * @return TeamInterface[]|[]
      */
-    public function rules()
+    public function getTeams(): array
     {
-        return [
-            [['label'], 'string', 'max' => 255],
-        ];
+        return $this->hasMany(Team::class, ['playoff_id' => 'id'])->all();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
+    public function rules(): array
     {
         return [
-            'id' => 'ID',
-            'label' => 'Label',
+            [['label'], 'string', 'max' => 255]
         ];
     }
 }

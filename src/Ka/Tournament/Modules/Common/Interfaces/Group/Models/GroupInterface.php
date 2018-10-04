@@ -6,6 +6,10 @@ use Ka\Tournament\Modules\Common\Interfaces\Core\IdInterface;
 use Ka\Tournament\Modules\Common\Interfaces\Match\Models\MatchResultInterface;
 use Ka\Tournament\Modules\Common\Interfaces\Team\Models\TeamInterface;
 
+/**
+ * Interface GroupInterface
+ * @package Ka\Tournament\Modules\Common\Interfaces\Group\Models
+ */
 interface GroupInterface extends IdInterface
 {
     /**
@@ -16,17 +20,17 @@ interface GroupInterface extends IdInterface
     public function getLabel(): string;
 
     /**
+     * Get all match results of games in a group
+     *
+     * @return MatchResultInterface[]|[]
+     */
+    public function getMatchResults(): array;
+
+    /**
      * Returns list of {@see TeamInterface} in a group
      *
      * @see TeamInterface
      * @return TeamInterface[]|[]
      */
     public function getTeams(): array;
-
-    /**
-     * Get all match results of games in a group
-     *
-     * @return MatchResultInterface[]|[]
-     */
-    public function getMatchResults(): array;
 }

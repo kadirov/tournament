@@ -1,9 +1,8 @@
 <?php
+declare(strict_types=1);
 
 namespace Ka\Tournament\Modules\Tournament\Controllers;
 
-use Ka\Tournament\Modules\Common\Interfaces\Group\GroupManagerInterface;
-use Ka\Tournament\Modules\Common\Interfaces\Match\MatchResultManagerInterface;
 use Ka\Tournament\Modules\Common\Interfaces\Tournament\Memento\TournamentCaretakerInterface;
 use Ka\Tournament\Modules\Common\Interfaces\Tournament\TournamentInterface;
 use yii\base\Module;
@@ -37,8 +36,7 @@ class DefaultController extends Controller
         Module $module,
         TournamentInterface $tournament,
         TournamentCaretakerInterface $tournamentCaretaker
-    )
-    {
+    ) {
         $this->tournament = $tournament;
 
         parent::__construct($id, $module);

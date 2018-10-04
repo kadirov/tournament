@@ -4,6 +4,11 @@ namespace Ka\Tournament\Modules\PlayOff\Helpers;
 
 use Ka\Tournament\Modules\Common\Interfaces\Team\Models\TeamInterface;
 
+/**
+ * Class PlayOffHelper
+ *
+ * @package Ka\Tournament\Modules\PlayOff\Helpers
+ */
 class PlayOffHelper
 {
     /**

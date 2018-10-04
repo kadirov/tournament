@@ -6,17 +6,13 @@ use Ka\Tournament\Modules\Common\Constants\TournamentState;
 use Ka\Tournament\Modules\Common\Interfaces\Tournament\TournamentInterface;
 use Ka\Tournament\Modules\Common\Interfaces\Tournament\TournamentStateInterface;
 
+/**
+ * Class GroupRound1Stage
+ *
+ * @package Ka\Tournament\Modules\Tournament\Components\States
+ */
 class GroupRound1Stage implements TournamentStateInterface
 {
-    /**
-     * Change state of tournament
-     * @param TournamentInterface $tournament
-     */
-    public function toNextRound(TournamentInterface $tournament): void
-    {
-        $tournament->setState(new GroupRound2Stage());
-    }
-
     /**
      * @return int A constant of {@see TournamentState}
      * @see TournamentState
@@ -24,5 +20,14 @@ class GroupRound1Stage implements TournamentStateInterface
     public function getValue(): int
     {
         return TournamentState::GROUP_ROUND_1;
+    }
+
+    /**
+     * Change state of tournament
+     * @param TournamentInterface $tournament
+     */
+    public function toNextRound(TournamentInterface $tournament): void
+    {
+        $tournament->setState(new GroupRound2Stage());
     }
 }

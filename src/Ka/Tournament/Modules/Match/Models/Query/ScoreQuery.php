@@ -1,29 +1,15 @@
 <?php
+declare(strict_types=1);
 
 namespace Ka\Tournament\Modules\Match\Models\Query;
+
+use yii\db\ActiveQuery;
 
 /**
  * This is the ActiveQuery class for [[\Ka\Tournament\Modules\Match\Models\Score]].
  *
  * @see \Ka\Tournament\Modules\Match\Models\Score
  */
-class ScoreQuery extends \yii\db\ActiveQuery
+class ScoreQuery extends ActiveQuery
 {
-    /**
-     * {@inheritdoc}
-     * @return \Ka\Tournament\Modules\Match\Models\Score[]|array
-     */
-    public function all($db = null)
-    {
-        return parent::all($db);
-    }
-
-    /**
-     * {@inheritdoc}
-     * @return \Ka\Tournament\Modules\Match\Models\Score|array|null
-     */
-    public function one($db = null)
-    {
-        return parent::one($db);
-    }
 }

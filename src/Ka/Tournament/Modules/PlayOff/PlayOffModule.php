@@ -1,16 +1,19 @@
 <?php
+declare(strict_types=1);
 
 namespace Ka\Tournament\Modules\PlayOff;
+
+use yii\base\Module;
 
 /**
  * playoff module definition class
  */
-class PlayOffModule extends \yii\base\Module
+class PlayOffModule extends Module
 {
     /**
      * {@inheritdoc}
      */
-    public function init()
+    public function init(): void
     {
         $this->controllerNamespace = 'Ka\Tournament\Modules\PlayOff\Controllers';
 

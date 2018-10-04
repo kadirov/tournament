@@ -1,34 +1,17 @@
 <?php
+declare(strict_types=1);
 
 namespace Ka\Tournament\Modules\PlayOff\Models\Query;
 
-use Ka\Tournament\Modules\PlayOff\Models\PlayOff;
+use yii\db\ActiveQuery;
 
 /**
  * This is the ActiveQuery class for [[\Ka\Tournament\Modules\PlayOff\Models\PlayOff]].
  *
  * @see \Ka\Tournament\Modules\PlayOff\Models\PlayOff
  */
-class PlayoffQuery extends \yii\db\ActiveQuery
+class PlayoffQuery extends ActiveQuery
 {
-    /**
-     * {@inheritdoc}
-     * @return PlayOff[]|[]
-     */
-    public function all($db = null)
-    {
-        return parent::all($db);
-    }
-
-    /**
-     * {@inheritdoc}
-     * @return PlayOff|[]|null
-     */
-    public function one($db = null)
-    {
-        return parent::one($db);
-    }
-
     /**
      * @param string $label
      * @return PlayoffQuery

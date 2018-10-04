@@ -4,6 +4,10 @@ namespace Ka\Tournament\Modules\Common\Interfaces\Match;
 
 use Ka\Tournament\Modules\Common\Interfaces\Match\Models\ScoreInterface;
 
+/**
+ * Interface ScoreManagerInterface
+ * @package Ka\Tournament\Modules\Common\Interfaces\Match
+ */
 interface ScoreManagerInterface
 {
     /**

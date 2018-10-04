@@ -7,6 +7,11 @@ use Ka\Tournament\Modules\Common\Interfaces\Match\ScoreGeneratorInterface;
 use Ka\Tournament\Modules\Common\Interfaces\Match\ScoreManagerInterface;
 use Ka\Tournament\Modules\Match\Models\Score;
 
+/**
+ * Class ScoreGenerator
+ *
+ * @package Ka\Tournament\Modules\Match\Components
+ */
 class ScoreGenerator implements ScoreGeneratorInterface
 {
     /**
@@ -23,18 +28,32 @@ class ScoreGenerator implements ScoreGeneratorInterface
      * ScoreGenerator constructor.
      * @param ScoreManagerInterface $scoreManager
      */
-    public function __construct
-    (
-        ScoreManagerInterface $scoreManager
-    )
+    public function __construct(ScoreManagerInterface $scoreManager)
     {
         $this->scoreManager = $scoreManager;
+    }
+
+    /**
+     * @return ScoreInterface
+     * @throws \Exception
+     */
+    public function draw(): ScoreInterface
+    {
+        $score = new Score();
+
+        $score->setFirstTeamScore($this->generateWinScore());
+        $score->setSecondTeamScore($score->getFirstTeamScore());
+
+        $this->getScoreManager()->save($score);
+
+        return $score;
     }
 
     /**
      * Generate score where first team is won
      *
      * @return ScoreInterface
+     * @throws \Exception
      */
     public function winFirstTeam(): ScoreInterface
     {
@@ -52,6 +71,7 @@ class ScoreGenerator implements ScoreGeneratorInterface
      * Generate score where second team is won
      *
      * @return ScoreInterface
+     * @throws \Exception
      */
     public function winSecondTeam(): ScoreInterface
     {
@@ -66,36 +86,22 @@ class ScoreGenerator implements ScoreGeneratorInterface
     }
 
     /**
-     * @return ScoreInterface
-     */
-    public function draw(): ScoreInterface
-    {
-        $score = new Score();
-
-
-        $score->setFirstTeamScore($this->generateWinScore());
-        $score->setSecondTeamScore($score->getFirstTeamScore());
-
-        $this->getScoreManager()->save($score);
-
-        return $score;
-    }
-
-    /**
-     * @return int
-     */
-    private function generateWinScore(): int
-    {
-        return random_int(1, self::MAX_SCORE);
-    }
-
-    /**
      * @param int $winScore
      * @return int
+     * @throws \Exception
      */
     private function generateLoseScore(int $winScore): int
     {
         return random_int(0, $winScore - 1);
+    }
+
+    /**
+     * @return int
+     * @throws \Exception
+     */
+    private function generateWinScore(): int
+    {
+        return random_int(1, self::MAX_SCORE);
     }
 
     /**

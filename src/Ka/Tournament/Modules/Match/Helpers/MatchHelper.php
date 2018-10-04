@@ -12,6 +12,31 @@ use Ka\Tournament\Modules\Common\Interfaces\Match\Models\MatchResultInterface;
 class MatchHelper
 {
     /**
+     * @param MatchResultInterface $matchResult
+     * @return bool
+     */
+    public static function isFinal(MatchResultInterface $matchResult): bool
+    {
+        if ($matchResult->getPlayOff() === null) {
+            return false;
+        }
+
+        return $matchResult->getPlayOff()->getLabel() === PlayOffLabel::FINAL;
+    }
+
+    /**
+     * @param MatchResultInterface $matchResult
+     * @return bool
+     */
+    public static function isMatchForThirdPlace(MatchResultInterface $matchResult): bool
+    {
+        if ($matchResult->getPlayOff() === null) {
+            return false;
+        }
+        return $matchResult->getPlayOff()->getLabel() === PlayOffLabel::FOR_THIRD_PLACE;
+    }
+
+    /**
      * Is match played in play off stage
      *
      * @param MatchResultInterface $matchResult
@@ -20,6 +45,27 @@ class MatchHelper
     public static function isPlayOff(MatchResultInterface $matchResult): bool
     {
         return $matchResult->getPlayOff() !== null;
+    }
+
+    /**
+     * @param MatchResultInterface $matchResult
+     * @return bool
+     */
+    public static function isQuarterFinal(MatchResultInterface $matchResult): bool
+    {
+        if ($matchResult->getPlayOff() === null) {
+            return false;
+        }
+
+        switch ($matchResult->getPlayOff()->getLabel()) {
+            case PlayOffLabel::QUARTER_FINAL_ABCD1:
+            case PlayOffLabel::QUARTER_FINAL_ABCD2:
+            case PlayOffLabel::QUARTER_FINAL_EFGH1:
+            case PlayOffLabel::QUARTER_FINAL_EFGH2:
+                return true;
+            default:
+                return false;
+        }
     }
 
     /**
@@ -51,27 +97,6 @@ class MatchHelper
      * @param MatchResultInterface $matchResult
      * @return bool
      */
-    public static function isQuarterFinal(MatchResultInterface $matchResult): bool
-    {
-        if ($matchResult->getPlayOff() === null) {
-            return false;
-        }
-
-        switch ($matchResult->getPlayOff()->getLabel()) {
-            case PlayOffLabel::QUARTER_FINAL_ABCD1:
-            case PlayOffLabel::QUARTER_FINAL_ABCD2:
-            case PlayOffLabel::QUARTER_FINAL_EFGH1:
-            case PlayOffLabel::QUARTER_FINAL_EFGH2:
-                return true;
-            default:
-                return false;
-        }
-    }
-
-    /**
-     * @param MatchResultInterface $matchResult
-     * @return bool
-     */
     public static function isSemiFinal(MatchResultInterface $matchResult): bool
     {
         if ($matchResult->getPlayOff() === null) {
@@ -85,30 +110,5 @@ class MatchHelper
             default:
                 return false;
         }
-    }
-
-    /**
-     * @param MatchResultInterface $matchResult
-     * @return bool
-     */
-    public static function isMatchForThirdPlace(MatchResultInterface $matchResult): bool
-    {
-        if ($matchResult->getPlayOff() === null) {
-            return false;
-        }
-        return $matchResult->getPlayOff()->getLabel() === PlayOffLabel::FOR_THIRD_PLACE;
-    }
-
-    /**
-     * @param MatchResultInterface $matchResult
-     * @return bool
-     */
-    public static function isFinal(MatchResultInterface $matchResult): bool
-    {
-        if ($matchResult->getPlayOff() === null) {
-            return false;
-        }
-
-        return $matchResult->getPlayOff()->getLabel() === PlayOffLabel::FINAL;
     }
 }

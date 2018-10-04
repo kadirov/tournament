@@ -2,6 +2,11 @@
 
 namespace Ka\Tournament\Modules\Common\Constants;
 
+/**
+ * Class PlayOffLabel
+ *
+ * @package Ka\Tournament\Modules\Common\Constants
+ */
 class PlayOffLabel
 {
     /**
@@ -33,54 +38,44 @@ class PlayOffLabel
      * E2 vs F1
      */
     public const E2F1 = 'E2 vs F1';
-
-    /**
-     * G1 vs H2
-     */
-    public const G1H2 = 'G1 vs H2';
-
-    /**
-     * G2 vs H1
-     */
-    public const G2H1 = 'G2 vs H1';
-
-    /**
-     * Quarter Final 1
-     */
-    public const QUARTER_FINAL_ABCD1 = 'Quarter Final 1';
-
-    /**
-     * Quarter Final 2
-     */
-    public const QUARTER_FINAL_ABCD2 = 'Quarter Final 2';
-
-    /**
-     * Quarter Final 3
-     */
-    public const QUARTER_FINAL_EFGH1 = 'Quarter Final 3';
-
-    /**
-     * Quarter Final 4
-     */
-    public const QUARTER_FINAL_EFGH2 = 'Quarter Final 4';
-
-    /**
-     * Semi Final 1
-     */
-    public const SEMI_FINAL_1 = 'Semi Final 1';
-
-    /**
-     * Semi Final 2
-     */
-    public const SEMI_FINAL_2 = 'Semi Final 2';
-
-    /**
-     * For Third Place
-     */
-    public const FOR_THIRD_PLACE = 'For Third Place';
-
     /**
      * Final
      */
     public const FINAL = 'Final';
+    /**
+     * For Third Place
+     */
+    public const FOR_THIRD_PLACE = 'For Third Place';
+    /**
+     * G1 vs H2
+     */
+    public const G1H2 = 'G1 vs H2';
+    /**
+     * G2 vs H1
+     */
+    public const G2H1 = 'G2 vs H1';
+    /**
+     * Quarter Final 1
+     */
+    public const QUARTER_FINAL_ABCD1 = 'Quarter Final 1';
+    /**
+     * Quarter Final 2
+     */
+    public const QUARTER_FINAL_ABCD2 = 'Quarter Final 2';
+    /**
+     * Quarter Final 3
+     */
+    public const QUARTER_FINAL_EFGH1 = 'Quarter Final 3';
+    /**
+     * Quarter Final 4
+     */
+    public const QUARTER_FINAL_EFGH2 = 'Quarter Final 4';
+    /**
+     * Semi Final 1
+     */
+    public const SEMI_FINAL_1 = 'Semi Final 1';
+    /**
+     * Semi Final 2
+     */
+    public const SEMI_FINAL_2 = 'Semi Final 2';
 }

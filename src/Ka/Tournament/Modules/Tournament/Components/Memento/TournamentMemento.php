@@ -5,6 +5,11 @@ namespace Ka\Tournament\Modules\Tournament\Components\Memento;
 use Ka\Tournament\Modules\Common\Interfaces\Tournament\Memento\TournamentMementoInterface;
 use Ka\Tournament\Modules\Common\Interfaces\Tournament\TournamentStateInterface;
 
+/**
+ * Class TournamentMemento
+ *
+ * @package Ka\Tournament\Modules\Tournament\Components\Memento
+ */
 class TournamentMemento implements TournamentMementoInterface
 {
     /**

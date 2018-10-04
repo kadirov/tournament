@@ -2,6 +2,10 @@
 
 namespace Ka\Tournament\Modules\Common\Interfaces\Core;
 
+/**
+ * Interface IdInterface
+ * @package Ka\Tournament\Modules\Common\Interfaces\Core
+ */
 interface IdInterface
 {
     /**

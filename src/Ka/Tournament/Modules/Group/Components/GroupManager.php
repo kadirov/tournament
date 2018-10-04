@@ -6,10 +6,14 @@ use Ka\Tournament\Modules\Common\Interfaces\Group\GroupManagerInterface;
 use Ka\Tournament\Modules\Common\Interfaces\Group\Models\GroupInterface;
 use Ka\Tournament\Modules\Common\Interfaces\Group\Models\GroupResultInterface;
 use Ka\Tournament\Modules\Common\Interfaces\Match\MatchResultManagerInterface;
-use Ka\Tournament\Modules\Common\Interfaces\Match\Models\MatchResultInterface;
 use Ka\Tournament\Modules\Group\Models\Group;
 use Ka\Tournament\Modules\Group\Models\GroupResult;
 
+/**
+ * Class GroupManager
+ *
+ * @package Ka\Tournament\Modules\Group\Components
+ */
 class GroupManager implements GroupManagerInterface
 {
     /**
@@ -21,10 +25,8 @@ class GroupManager implements GroupManagerInterface
      * GroupManager constructor.
      * @param MatchResultManagerInterface $matchResultManager
      */
-    public function __construct
-    (
-        MatchResultManagerInterface $matchResultManager
-    ) {
+    public function __construct(MatchResultManagerInterface $matchResultManager)
+    {
         $this->matchResultManager = $matchResultManager;
     }
 
@@ -34,15 +36,6 @@ class GroupManager implements GroupManagerInterface
     public function getAll(): array
     {
         return Group::find()->all();
-    }
-
-    /**
-     * @param GroupInterface|Group $group
-     * @return bool
-     */
-    public function save(GroupInterface $group): bool
-    {
-        return $group->save();
     }
 
     /**
@@ -77,12 +70,20 @@ class GroupManager implements GroupManagerInterface
                     if ($matchResult->getTeam1()->getId() === $team->getId()) {
                         $gr->setGamesWon($gr->getGamesWon() + 1);
                         $gr->setPoint($gr->getPoint() + 3);
-                        $gr->setGoalDifference($gr->getGoalDifference() + $matchResult->getFinalScore()->getFirstTeamScore() - $matchResult->getFinalScore()->getSecondTeamScore());
+                        $gr->setGoalDifference(
+                            $gr->getGoalDifference() +
+                            $matchResult->getFinalScore()->getFirstTeamScore() -
+                            $matchResult->getFinalScore()->getSecondTeamScore()
+                        );
                         continue;
                     }
 
                     $gr->setGamesLost($gr->getGamesLost() + 1);
-                    $gr->setGoalDifference($gr->getGoalDifference() + $matchResult->getSecondTimeScore()->getSecondTeamScore() - $matchResult->getFinalScore()->getFirstTeamScore());
+                    $gr->setGoalDifference(
+                        $gr->getGoalDifference() +
+                        $matchResult->getSecondTimeScore()->getSecondTeamScore() -
+                        $matchResult->getFinalScore()->getFirstTeamScore()
+                    );
 
                     continue;
                 }
@@ -90,18 +91,26 @@ class GroupManager implements GroupManagerInterface
                 if ($matchResult->getTeam2()->getId() === $team->getId()) {
                     $gr->setGamesWon($gr->getGamesWon() + 1);
                     $gr->setPoint($gr->getPoint() + 3);
-                    $gr->setGoalDifference($gr->getGoalDifference() + $matchResult->getFinalScore()->getSecondTeamScore() - $matchResult->getFinalScore()->getFirstTeamScore());
+                    $gr->setGoalDifference(
+                        $gr->getGoalDifference() +
+                        $matchResult->getFinalScore()->getSecondTeamScore() -
+                        $matchResult->getFinalScore()->getFirstTeamScore()
+                    );
                     continue;
                 }
 
                 $gr->setGamesLost($gr->getGamesLost() + 1);
-                $gr->setGoalDifference($gr->getGoalDifference() + $matchResult->getFinalScore()->getFirstTeamScore() - $matchResult->getFinalScore()->getSecondTeamScore());
+                $gr->setGoalDifference(
+                    $gr->getGoalDifference() +
+                    $matchResult->getFinalScore()->getFirstTeamScore() -
+                    $matchResult->getFinalScore()->getSecondTeamScore()
+                );
             }
 
             $result[] = $gr;
         }
 
-        usort($result, function (GroupResult $a, GroupResult $b) {
+        \usort($result, function (GroupResult $a, GroupResult $b) {
             if ($a->getPoint() < $b->getPoint()) {
                 return 1;
             }
@@ -134,16 +143,19 @@ class GroupManager implements GroupManagerInterface
     }
 
     /**
+     * @param GroupInterface|Group $group
+     * @return bool
+     */
+    public function save(GroupInterface $group): bool
+    {
+        return $group->save();
+    }
+
+    /**
      * @return MatchResultManagerInterface
      */
     private function getMatchResultManager(): MatchResultManagerInterface
     {
         return $this->matchResultManager;
     }
-
-    private function calcWon(GroupResult $gr, MatchResultInterface $matchResult): void
-    {
-
-    }
-
 }

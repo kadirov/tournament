@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ka\Tournament\Modules\Match\Models;
 
@@ -29,10 +30,23 @@ use yii\db\ActiveRecord;
  * @property Score $penaltiesScore
  * @property Score $secondTimeScore
  * @property Team $team1
+ * @property \yii\db\ActiveRecord|null|\Ka\Tournament\Modules\Common\Interfaces\Group\Models\GroupInterface $group
+ * @property \yii\db\ActiveRecord|null|\Ka\Tournament\Modules\Common\Interfaces\PlayOff\Models\PlayOffInterface $playOff
+ * @property \Ka\Tournament\Modules\Common\Interfaces\Match\Models\ScoreInterface $additionalScore
+ * @property \Ka\Tournament\Modules\Common\Interfaces\Match\Models\ScoreInterface $additionalTimesScore
  * @property Team $team2
  */
 class MatchResult extends ActiveRecord implements MatchResultInterface
 {
+    /**
+     * {@inheritdoc}
+     * @return MatchResultQuery the active query used by this AR class.
+     */
+    public static function find(): MatchResultQuery
+    {
+        return new MatchResultQuery(static::class);
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -43,81 +57,20 @@ class MatchResult extends ActiveRecord implements MatchResultInterface
 
     /**
      * {@inheritdoc}
-     * @return MatchResultQuery the active query used by this AR class.
      */
-    public static function find()
+    public function attributeLabels(): array
     {
-        return new MatchResultQuery(static::class);
-    }
-
-    /**
-     * @param ScoreInterface $score
-     * @return MatchResult
-     */
-    public function setFinalScore(ScoreInterface $score): self
-    {
-        $this->final_score = $score->getId();
-        return $this;
-    }
-
-    /**
-     * @param \Ka\Tournament\Modules\Common\Interfaces\Match\Models\ScoreInterface $score
-     * @return MatchResult
-     */
-    public function setAdditionalScore(ScoreInterface $score): self
-    {
-        $this->additional_times_score = $score->getId();
-        return $this;
-    }
-
-    /**
-     * @param \Ka\Tournament\Modules\Common\Interfaces\Match\Models\ScoreInterface $score
-     * @return MatchResult
-     */
-    public function setPenaltiesScore(ScoreInterface $score): self
-    {
-        $this->penalties_score = $score->getId();
-        return $this;
-    }
-
-    /**
-     * @param \Ka\Tournament\Modules\Common\Interfaces\Match\Models\ScoreInterface $score
-     * @return MatchResult
-     */
-    public function setSecondTimeScore(ScoreInterface $score): self
-    {
-        $this->second_time_score = $score->getId();
-        return $this;
-    }
-
-    /**
-     * @param TeamInterface $team
-     * @return MatchResult
-     */
-    public function setTeam1(TeamInterface $team): self
-    {
-        $this->team1_id = $team->getId();
-        return $this;
-    }
-
-    /**
-     * @param TeamInterface $team
-     * @return MatchResult
-     */
-    public function setTeam2(TeamInterface $team): self
-    {
-        $this->team2_id = $team->getId();
-        return $this;
-    }
-
-    /**
-     * @param GroupInterface $group
-     * @return MatchResult
-     */
-    public function setGroup(GroupInterface $group): self
-    {
-        $this->group_id = $group->getId();
-        return $this;
+        return [
+            'id' => 'ID',
+            'team1_id' => 'Team1 ID',
+            'team2_id' => 'Team2 ID',
+            'group_id' => 'Group ID',
+            'playoff_id' => 'PlayOff ID',
+            'final_score' => 'Final Score',
+            'second_time_score' => 'Second Time Score',
+            'additional_times_score' => 'Additional Time Score',
+            'penalties_score' => 'Penalties Score'
+        ];
     }
 
     /**
@@ -129,32 +82,6 @@ class MatchResult extends ActiveRecord implements MatchResultInterface
     }
 
     /**
-     * @return GroupInterface|null|ActiveRecord
-     */
-    public function getGroup(): ?GroupInterface
-    {
-        return $this->hasOne(Group::class, ['id' => 'group_id'])->one();
-    }
-
-    /**
-     * @return PlayOffInterface|null|ActiveRecord
-     */
-    public function getPlayOff(): ?PlayOffInterface
-    {
-        return $this->hasOne(PlayOff::class, ['id' => 'playoff_id'])->one();
-    }
-
-    /**
-     * @param PlayOffInterface $playOff
-     * @return MatchResult
-     */
-    public function setPlayOff(PlayOffInterface $playOff): self
-    {
-        $this->playoff_id = $playOff->getId();
-        return $this;
-    }
-
-    /**
      * @return ScoreInterface|ActiveRecord
      */
     public function getFinalScore(): ScoreInterface
@@ -163,11 +90,27 @@ class MatchResult extends ActiveRecord implements MatchResultInterface
     }
 
     /**
+     * @return GroupInterface|null|ActiveRecord
+     */
+    public function getGroup(): ?GroupInterface
+    {
+        return $this->hasOne(Group::class, ['id' => 'group_id'])->one();
+    }
+
+    /**
      * @return ScoreInterface|null|ActiveRecord
      */
     public function getPenaltiesScore(): ?ScoreInterface
     {
         return $this->hasOne(Score::class, ['id' => 'penalties_score'])->one();
+    }
+
+    /**
+     * @return PlayOffInterface|null|ActiveRecord
+     */
+    public function getPlayOff(): ?PlayOffInterface
+    {
+        return $this->hasOne(PlayOff::class, ['id' => 'playoff_id'])->one();
     }
 
     /**
@@ -192,6 +135,20 @@ class MatchResult extends ActiveRecord implements MatchResultInterface
     public function getTeam2(): TeamInterface
     {
         return $this->hasOne(Team::class, ['id' => 'team2_id'])->one();
+    }
+
+    /**
+     * Returns true if match has ended with draw
+     *
+     * @return bool
+     */
+    public function isDraw(): bool
+    {
+        if ($this->getPenaltiesScore() !== null) {
+            return false;
+        }
+
+        return $this->getFinalScore()->getFirstTeamScore() === $this->getFinalScore()->getSecondTeamScore();
     }
 
     /**
@@ -220,20 +177,6 @@ class MatchResult extends ActiveRecord implements MatchResultInterface
         }
 
         return $this->getFinalScore()->getFirstTeamScore() < $this->getFinalScore()->getSecondTeamScore();
-    }
-
-    /**
-     * Returns true if match has ended with draw
-     *
-     * @return bool
-     */
-    public function isDraw(): bool
-    {
-        if ($this->getPenaltiesScore() !== null) {
-            return false;
-        }
-
-        return $this->getFinalScore()->getFirstTeamScore() === $this->getFinalScore()->getSecondTeamScore();
     }
 
     /**
@@ -311,25 +254,87 @@ class MatchResult extends ActiveRecord implements MatchResultInterface
                 'skipOnError' => true,
                 'targetClass' => Team::class,
                 'targetAttribute' => ['team2_id' => 'id']
-            ],
+            ]
         ];
     }
 
     /**
-     * {@inheritdoc}
+     * @param \Ka\Tournament\Modules\Common\Interfaces\Match\Models\ScoreInterface $score
+     * @return MatchResult
      */
-    public function attributeLabels(): array
+    public function setAdditionalScore(ScoreInterface $score): self
     {
-        return [
-            'id' => 'ID',
-            'team1_id' => 'Team1 ID',
-            'team2_id' => 'Team2 ID',
-            'group_id' => 'Group ID',
-            'playoff_id' => 'PlayOff ID',
-            'final_score' => 'Final Score',
-            'second_time_score' => 'Second Time Score',
-            'additional_times_score' => 'Additional Time Score',
-            'penalties_score' => 'Penalties Score',
-        ];
+        $this->additional_times_score = $score->getId();
+        return $this;
+    }
+
+    /**
+     * @param ScoreInterface $score
+     * @return MatchResult
+     */
+    public function setFinalScore(ScoreInterface $score): self
+    {
+        $this->final_score = $score->getId();
+        return $this;
+    }
+
+    /**
+     * @param GroupInterface $group
+     * @return MatchResult
+     */
+    public function setGroup(GroupInterface $group): self
+    {
+        $this->group_id = $group->getId();
+        return $this;
+    }
+
+    /**
+     * @param \Ka\Tournament\Modules\Common\Interfaces\Match\Models\ScoreInterface $score
+     * @return MatchResult
+     */
+    public function setPenaltiesScore(ScoreInterface $score): self
+    {
+        $this->penalties_score = $score->getId();
+        return $this;
+    }
+
+    /**
+     * @param PlayOffInterface $playOff
+     * @return MatchResult
+     */
+    public function setPlayOff(PlayOffInterface $playOff): self
+    {
+        $this->playoff_id = $playOff->getId();
+        return $this;
+    }
+
+    /**
+     * @param \Ka\Tournament\Modules\Common\Interfaces\Match\Models\ScoreInterface $score
+     * @return MatchResult
+     */
+    public function setSecondTimeScore(ScoreInterface $score): self
+    {
+        $this->second_time_score = $score->getId();
+        return $this;
+    }
+
+    /**
+     * @param TeamInterface $team
+     * @return MatchResult
+     */
+    public function setTeam1(TeamInterface $team): self
+    {
+        $this->team1_id = $team->getId();
+        return $this;
+    }
+
+    /**
+     * @param TeamInterface $team
+     * @return MatchResult
+     */
+    public function setTeam2(TeamInterface $team): self
+    {
+        $this->team2_id = $team->getId();
+        return $this;
     }
 }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ka\Tournament\Modules\Team\Models;
 
@@ -18,6 +19,7 @@ use yii\db\ActiveRecord;
  * @property int $power
  * @property int $group_id
  * @property int $playoff_id
+ * @property \yii\db\ActiveRecord|null|\Ka\Tournament\Modules\Common\Interfaces\PlayOff\Models\PlayOffInterface $playOff
  * @property GroupInterface $group
  */
 class Team extends ActiveRecord implements TeamInterface
@@ -26,7 +28,7 @@ class Team extends ActiveRecord implements TeamInterface
      * {@inheritdoc}
      * @return TeamQuery the active query used by this AR class.
      */
-    public static function find()
+    public static function find(): TeamQuery
     {
         return new TeamQuery(static::class);
     }
@@ -40,23 +42,34 @@ class Team extends ActiveRecord implements TeamInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function attributeLabels(): array
+    {
+        return [
+            'id' => 'ID',
+            'name' => 'Name',
+            'power' => 'Power',
+            'group_id' => 'Group ID',
+            'playoff_id' => 'PlayOff ID'
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     * @return GroupInterface|null|ActiveRecord
+     */
+    public function getGroup(): ?GroupInterface
+    {
+        return $this->hasOne(Group::class, ['id' => 'group_id'])->one();
+    }
+
+    /**
      * @return int
      */
     public function getId(): int
     {
         return $this->id;
-    }
-
-    /**
-     * Power of team.
-     *
-     * It will be taken to result of match.
-     *
-     * @return int
-     */
-    public function getPower(): int
-    {
-        return $this->power;
     }
 
     /**
@@ -70,59 +83,6 @@ class Team extends ActiveRecord implements TeamInterface
     }
 
     /**
-     * {@inheritdoc}
-     * @return GroupInterface|null|ActiveRecord
-     */
-    public function getGroup(): ?GroupInterface
-    {
-        return $this->hasOne(Group::class, ['id' => 'group_id'])->one();
-    }
-
-    /**
-     * Power of team.
-     *
-     * It will be taken to result of match.
-     *
-     * @param int $power
-     * @return \Ka\Tournament\Modules\Common\Interfaces\Team\Models\TeamInterface
-     */
-    public function setPower(int $power): TeamInterface
-    {
-        $this->power = $power;
-        return $this;
-    }
-
-    /**
-     * Get name of the team.
-     *
-     * @param string $name
-     * @return \Ka\Tournament\Modules\Common\Interfaces\Team\Models\TeamInterface
-     */
-    public function setName(string $name): TeamInterface
-    {
-        $this->name = $name;
-        return $this;
-    }
-
-    /**
-     * Get group of team.
-     *
-     * @param GroupInterface $group
-     * @return \Ka\Tournament\Modules\Common\Interfaces\Team\Models\TeamInterface Returns null if team haven't group yet
-     */
-    public function setGroup(?GroupInterface $group): TeamInterface
-    {
-        if ($group === null) {
-            $this->group_id = null;
-            return $this;
-        }
-
-        $this->group_id = $group->getId();
-
-        return $this;
-    }
-
-    /**
      * @return PlayOffInterface|null|ActiveRecord
      */
     public function getPlayOff(): ?PlayOffInterface
@@ -131,18 +91,15 @@ class Team extends ActiveRecord implements TeamInterface
     }
 
     /**
-     * @param PlayOffInterface $playOff
-     * @return TeamInterface
+     * Power of team.
+     *
+     * It will be taken to result of match.
+     *
+     * @return int
      */
-    public function setPlayOff(?PlayOffInterface $playOff): TeamInterface
+    public function getPower(): int
     {
-        if ($playOff === null) {
-            $this->playoff_id = null;
-            return $this;
-        }
-
-        $this->playoff_id = $playOff->getId();
-        return $this;
+        return $this->power;
     }
 
     /**
@@ -166,21 +123,66 @@ class Team extends ActiveRecord implements TeamInterface
                 'skipOnError' => true,
                 'targetClass' => PlayOff::class,
                 'targetAttribute' => ['playoff_id' => 'id']
-            ],
+            ]
         ];
     }
 
     /**
-     * {@inheritdoc}
+     * Get group of team.
+     *
+     * @param GroupInterface $group
+     * @return \Ka\Tournament\Modules\Common\Interfaces\Team\Models\TeamInterface Returns null if team haven't group yet
      */
-    public function attributeLabels(): array
+    public function setGroup(?GroupInterface $group): TeamInterface
     {
-        return [
-            'id' => 'ID',
-            'name' => 'Name',
-            'power' => 'Power',
-            'group_id' => 'Group ID',
-            'playoff_id' => 'PlayOff ID',
-        ];
+        if ($group === null) {
+            $this->group_id = null;
+            return $this;
+        }
+
+        $this->group_id = $group->getId();
+
+        return $this;
+    }
+
+    /**
+     * Get name of the team.
+     *
+     * @param string $name
+     * @return \Ka\Tournament\Modules\Common\Interfaces\Team\Models\TeamInterface
+     */
+    public function setName(string $name): TeamInterface
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * @param PlayOffInterface $playOff
+     * @return TeamInterface
+     */
+    public function setPlayOff(?PlayOffInterface $playOff): TeamInterface
+    {
+        if ($playOff === null) {
+            $this->playoff_id = null;
+            return $this;
+        }
+
+        $this->playoff_id = $playOff->getId();
+        return $this;
+    }
+
+    /**
+     * Power of team.
+     *
+     * It will be taken to result of match.
+     *
+     * @param int $power
+     * @return \Ka\Tournament\Modules\Common\Interfaces\Team\Models\TeamInterface
+     */
+    public function setPower(int $power): TeamInterface
+    {
+        $this->power = $power;
+        return $this;
     }
 }

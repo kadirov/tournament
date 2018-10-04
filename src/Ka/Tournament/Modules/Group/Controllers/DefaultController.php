@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ka\Tournament\Modules\Group\Controllers;
 
@@ -17,6 +18,12 @@ class DefaultController extends Controller
      */
     private $groupManager;
 
+    /**
+     * DefaultController constructor.
+     * @param string $id
+     * @param Module $module
+     * @param GroupManagerInterface $groupManager
+     */
     public function __construct(
         string $id,
         Module $module,

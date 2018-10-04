@@ -4,6 +4,10 @@ namespace Ka\Tournament\Modules\Common\Interfaces\PlayOff;
 
 use Ka\Tournament\Modules\Common\Interfaces\Tournament\TournamentStateInterface;
 
+/**
+ * Interface PlayOffGamesInterface
+ * @package Ka\Tournament\Modules\Common\Interfaces\PlayOff
+ */
 interface PlayOffGamesInterface
 {
     /**

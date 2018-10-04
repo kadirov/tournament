@@ -6,17 +6,13 @@ use Ka\Tournament\Modules\Common\Constants\TournamentState;
 use Ka\Tournament\Modules\Common\Interfaces\Tournament\TournamentInterface;
 use Ka\Tournament\Modules\Common\Interfaces\Tournament\TournamentStateInterface;
 
+/**
+ * Class PlayOffSemiFinalStage
+ *
+ * @package Ka\Tournament\Modules\Tournament\Components\States
+ */
 class PlayOffSemiFinalStage implements TournamentStateInterface
 {
-    /**
-     * Change state of tournament
-     * @param TournamentInterface $tournament
-     */
-    public function toNextRound(TournamentInterface $tournament): void
-    {
-        $tournament->setState(new PlayOffForThirdPlaceStage());
-    }
-
     /**
      * @return int A constant of {@see TournamentState}
      * @see TournamentState
@@ -24,5 +20,14 @@ class PlayOffSemiFinalStage implements TournamentStateInterface
     public function getValue(): int
     {
         return TournamentState::PLAYOFF_SEMI_FINAL;
+    }
+
+    /**
+     * Change state of tournament
+     * @param TournamentInterface $tournament
+     */
+    public function toNextRound(TournamentInterface $tournament): void
+    {
+        $tournament->setState(new PlayOffForThirdPlaceStage());
     }
 }

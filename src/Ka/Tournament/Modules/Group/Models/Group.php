@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ka\Tournament\Modules\Group\Models;
 
@@ -25,7 +26,7 @@ class Group extends ActiveRecord implements GroupInterface
      * {@inheritdoc}
      * @return GroupQuery the active query used by this AR class.
      */
-    public static function find()
+    public static function find(): GroupQuery
     {
         return new GroupQuery(static::class);
     }
@@ -36,6 +37,17 @@ class Group extends ActiveRecord implements GroupInterface
     public static function tableName(): string
     {
         return 'group';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function attributeLabels(): array
+    {
+        return [
+            'id' => 'ID',
+            'label' => 'Label'
+        ];
     }
 
     /**
@@ -77,18 +89,7 @@ class Group extends ActiveRecord implements GroupInterface
     public function rules(): array
     {
         return [
-            [['label'], 'string', 'max' => 255],
-        ];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function attributeLabels(): array
-    {
-        return [
-            'id' => 'ID',
-            'label' => 'Label',
+            [['label'], 'string', 'max' => 255]
         ];
     }
 }

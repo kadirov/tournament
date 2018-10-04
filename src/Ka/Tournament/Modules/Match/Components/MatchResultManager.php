@@ -8,8 +8,23 @@ use Ka\Tournament\Modules\Common\Interfaces\Match\Models\MatchResultInterface;
 use Ka\Tournament\Modules\Common\Interfaces\Team\Models\TeamInterface;
 use Ka\Tournament\Modules\Match\Models\MatchResult;
 
+/**
+ * Class MatchResultManager
+ *
+ * @package Ka\Tournament\Modules\Match\Components
+ */
 class MatchResultManager implements MatchResultManagerInterface
 {
+    /**
+     * @param TeamInterface $team
+     * @param GroupInterface $group
+     * @return MatchResultInterface[]|[]
+     */
+    public function getTeamMatchesInGroup(TeamInterface $team, GroupInterface $group): array
+    {
+        return MatchResult::find()->teamMatchesInGroup($team, $group)->orderedDesk()->all();
+    }
+
     /**
      * @param MatchResultInterface|MatchResult $matchResult
      * @return mixed
@@ -31,15 +46,5 @@ class MatchResultManager implements MatchResultManagerInterface
     public function truncate(): void
     {
         MatchResult::deleteAll();
-    }
-
-    /**
-     * @param TeamInterface $team
-     * @param GroupInterface $group
-     * @return MatchResultInterface[]|[]
-     */
-    public function getTeamMatchesInGroup(TeamInterface $team, GroupInterface $group): array
-    {
-        return MatchResult::find()->teamMatchesInGroup($team, $group)->orderedDesk()->all();
     }
 }

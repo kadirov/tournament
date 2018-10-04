@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Ka\Tournament\Modules\Match\Controllers;
 
@@ -20,6 +21,12 @@ class DefaultController extends Controller
      */
     private $matchResultManager;
 
+    /**
+     * DefaultController constructor.
+     * @param string $id
+     * @param Module $module
+     * @param MatchResultManagerInterface $matchResultManager
+     */
     public function __construct(
         string $id,
         Module $module,
