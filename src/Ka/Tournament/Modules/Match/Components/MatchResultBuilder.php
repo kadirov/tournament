@@ -10,6 +10,7 @@ use Ka\Tournament\Modules\Common\Interfaces\Match\ScoreManagerInterface;
 use Ka\Tournament\Modules\Common\Interfaces\Team\Models\TeamInterface;
 use Ka\Tournament\Modules\Match\Models\MatchResult;
 use Ka\Tournament\Modules\Match\Models\Score;
+use phpDocumentor\Reflection\Types\This;
 
 class MatchResultBuilder implements MatchResultBuilderInterface
 {
@@ -71,24 +72,24 @@ class MatchResultBuilder implements MatchResultBuilderInterface
             return $matchResult;
         }
 
-        return $this->doAdditionalTimesAndPenalties($matchResult, $drawScore);
+        return $this->doAdditionalTimesAndPenalties($matchResult);
     }
 
     /**
+     * @todo create scenario pattern for Score and set for additional times 2 goals maximum
      * @param MatchResultInterface|MatchResult $matchResult
-     * @param ScoreInterface $drawScore
      * @return MatchResult
      */
     private function doAdditionalTimesAndPenalties(
-        MatchResultInterface $matchResult,
-        ScoreInterface $drawScore
+        MatchResultInterface $matchResult
     ): MatchResultInterface {
-        $additionalTime = $this->build($matchResult->getTeam1(), $matchResult->getTeam1(), true);
+        $additionalTime = $this->build($matchResult->getTeam1(), $matchResult->getTeam2(), true);
         $matchResult->setAdditionalScore($additionalTime->getFinalScore());
 
         $finalScore = new Score();
-        $finalScore->setFirstTeamScore($this->sumOfFirstTeamScores($drawScore, $additionalTime->getFinalScore()));
-        $finalScore->setSecondTeamScore($this->sumOfSecondTeamScores($drawScore, $additionalTime->getFinalScore()));
+
+        $finalScore->setFirstTeamScore($this->sumOfFirstTeamScores($matchResult->getSecondTimeScore(), $additionalTime->getFinalScore()));
+        $finalScore->setSecondTeamScore($this->sumOfSecondTeamScores($matchResult->getSecondTimeScore(), $additionalTime->getFinalScore()));
 
         $this->getScoreManager()->save($finalScore);
 
@@ -102,12 +103,20 @@ class MatchResultBuilder implements MatchResultBuilderInterface
     }
 
     /**
+     * @todo create scenario pattern for Score and set for penalties 1 goal different between teams
      * @param MatchResultInterface|MatchResult $matchResult
      * @return MatchResultInterface
      */
     private function doPenalties(MatchResultInterface $matchResult): MatchResultInterface
     {
-        $penalties = $this->build($matchResult->getTeam1(), $matchResult->getTeam1(), false);
+        while (true) {
+            $penalties = $this->build($matchResult->getTeam1(), $matchResult->getTeam2(), false);
+
+            if (!$penalties->isDraw()) {
+                break;
+            }
+        }
+
         $matchResult->setPenaltiesScore($penalties->getFinalScore());
 
         return $matchResult;
