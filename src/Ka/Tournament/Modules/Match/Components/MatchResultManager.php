@@ -42,4 +42,22 @@ class MatchResultManager implements MatchResultManagerInterface
     {
         return MatchResult::find()->teamMatchesInGroup($team, $group)->orderedDesk()->all();
     }
+
+    /**
+     * @param GroupInterface $group
+     * @return MatchResultInterface[]|[]
+     */
+    public function getMatchesInGroup(GroupInterface $group): array
+    {
+        return MatchResult::find()->matchesInGroup($group)->orderedDesk()->all();
+    }
+
+    /**
+     * @param TeamInterface $team
+     * @return MatchResultInterface[]|[]
+     */
+    public function getTeamMatches(TeamInterface $team): array
+    {
+        return MatchResult::find()->teamMatches($team)->orderedDesk()->all();
+    }
 }

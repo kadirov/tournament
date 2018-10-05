@@ -13,7 +13,17 @@ use yii\helpers\Url;
     <?php
     foreach ($allGroupsResults as $groupsResults):?>
         <p>
-            <?= isset($groupsResults[0]) ? 'Group: ' . $groupsResults[0]->getGroup()->getLabel() : '' ?>
+            <?php
+            if (isset($groupsResults[0])) {
+                $groupMatchesUrl = Url::to([
+                    '/match/default/matches-in-group',
+                    'groupId' => $groupsResults[0]->getGroup()->getId(),
+                ]);
+                print 'Group: ';
+                print $groupsResults[0]->getGroup()->getLabel();
+                print '. <a href="' . $groupMatchesUrl . '">See matches</a>';
+            }
+            ?>
         </p>
         <table class="table table-striped">
             <tr>
@@ -28,14 +38,12 @@ use yii\helpers\Url;
             </tr>
             <?php foreach ($groupsResults as $groupResult): ?>
                 <tr class="<?= $groupResult->getGamesPlayed() === 3 && $groupResult->getPosition() <= 2 ? 'success' : '' ?>">
-                    <?php $urlToMatches = Url::to([
-                        '/match/default/team-matches-in-group',
+                    <?php $teamMatchesUrl = Url::to([
+                        '/match/default/team-matches',
                         'teamId' => $groupResult->getTeam()->getId(),
-                        'groupId' => $groupResult->getGroup()->getId(),
-
                     ]) ?>
                     <td><?= $groupResult->getPosition() ?></td>
-                    <td><a href="<?= $urlToMatches ?>"><?= $groupResult->getTeam()->getName() ?></a></td>
+                    <td><a href="<?= $teamMatchesUrl ?>"><?= $groupResult->getTeam()->getName() ?></a></td>
                     <td><?= $groupResult->getGamesPlayed() ?></td>
                     <td><?= $groupResult->getGamesWon() ?></td>
                     <td><?= $groupResult->getGamesDrawn() ?></td>

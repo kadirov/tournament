@@ -51,6 +51,34 @@ class MatchResultQuery extends \yii\db\ActiveQuery
     }
 
     /**
+     * @param GroupInterface $group
+     * @return MatchResultQuery
+     */
+    public function matchesInGroup(GroupInterface $group): self
+    {
+        $this->andWhere([
+            'group_id' => $group->getId(),
+        ]);
+
+        return $this;
+    }
+
+    /**
+     * @param TeamInterface $team
+     * @return MatchResultQuery
+     */
+    public function teamMatches(TeamInterface $team): self
+    {
+        $this->andWhere([
+            'or',
+            ['team1_id' => $team->getId()],
+            ['team2_id' => $team->getId()]
+        ]);
+
+        return $this;
+    }
+
+    /**
      * @return MatchResultQuery
      */
     public function orderedDesk(): self

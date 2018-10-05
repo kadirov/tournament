@@ -25,4 +25,16 @@ interface MatchResultManagerInterface
      * @return MatchResultInterface[]|[]
      */
     public function getTeamMatchesInGroup(TeamInterface $team, GroupInterface $group): array;
+
+    /**
+     * @param TeamInterface $team
+     * @return MatchResultInterface[]|[]
+     */
+    public function getTeamMatches(TeamInterface $team): array;
+
+    /**
+     * @param GroupInterface $group
+     * @return MatchResultInterface[]|[]
+     */
+    public function getMatchesInGroup(GroupInterface $group): array;
 }

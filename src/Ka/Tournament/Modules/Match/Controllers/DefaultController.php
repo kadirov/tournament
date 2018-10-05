@@ -20,6 +20,12 @@ class DefaultController extends Controller
      */
     private $matchResultManager;
 
+    /**
+     * DefaultController constructor.
+     * @param string $id
+     * @param Module $module
+     * @param MatchResultManagerInterface $matchResultManager
+     */
     public function __construct(
         string $id,
         Module $module,
@@ -45,11 +51,10 @@ class DefaultController extends Controller
 
     /**
      * @param int $teamId
-     * @param int $groupId
      * @return string
      * @throws NotFoundHttpException
      */
-    public function actionTeamMatchesInGroup(int $teamId, int $groupId): string
+    public function actionTeamMatches(int $teamId): string
     {
         $team = Team::findOne($teamId);
 
@@ -57,15 +62,32 @@ class DefaultController extends Controller
             throw new NotFoundHttpException('Team is not found');
         }
 
+        $matchResults = $this->getMatchResultManager()->getTeamMatches($team);
+
+        return $this->render('team-matches', [
+            'teamName' => $team->getName(),
+            'matchResults' => $matchResults,
+        ]);
+    }
+
+
+    /**
+     * @param int $groupId
+     * @return string
+     * @throws NotFoundHttpException
+     */
+    public function actionMatchesInGroup(int $groupId): string
+    {
         $group = Group::findOne($groupId);
 
         if ($group === null) {
             throw new NotFoundHttpException('Group is not found');
         }
 
-        $matchResults = $this->getMatchResultManager()->getTeamMatchesInGroup($team, $group);
+        $matchResults = $this->getMatchResultManager()->getMatchesInGroup($group);
 
-        return $this->render('team-matches-in-group', [
+        return $this->render('matches-in-group', [
+            'groupLabel' => $group->getLabel(),
             'matchResults' => $matchResults
         ]);
     }
