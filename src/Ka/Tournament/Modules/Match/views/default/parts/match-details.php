@@ -18,29 +18,29 @@ $lastPlayOff = '';
         <?php if (MatchHelper::isPlayOff($mr)): ?>
             <?php if (MatchHelper::isFinal($mr)): ?>
                 <tr>
-                    <td colspan="5" class="info">Final</td>
+                    <td colspan="5" class="bg-primary">Final</td>
                 </tr>
 
             <?php elseif (MatchHelper::isMatchForThirdPlace($mr)): ?>
                 <tr>
-                    <td colspan="5" class="info">Match for Third Place</td>
+                    <td colspan="5" class="bg-primary">Match for Third Place</td>
                 </tr>
 
             <?php elseif ($lastPlayOff !== 'semi-final' && MatchHelper::isSemiFinal($mr)): ?>
                 <tr>
-                    <td colspan="5" class="info">Semi-Final</td>
+                    <td colspan="5" class="bg-primary">Semi-Final</td>
                 </tr>
                 <?php $lastPlayOff = 'semi-final' ?>
 
             <?php elseif ($lastPlayOff !== 'quarter-final' && MatchHelper::isQuarterFinal($mr)): ?>
                 <tr>
-                    <td colspan="5" class="info">Quarter-Final</td>
+                    <td colspan="5" class="bg-primary">Quarter-Final</td>
                 </tr>
                 <?php $lastPlayOff = 'quarter-final' ?>
 
             <?php elseif ($lastPlayOff !== 'round-16' && MatchHelper::isRound16($mr)): ?>
                 <tr>
-                    <td colspan="5" class="info">Round of 16</td>
+                    <td colspan="5" class="bg-primary">Round of 16</td>
                 </tr>
                 <?php $lastPlayOff = 'round-16';
             endif ?>
@@ -53,8 +53,8 @@ $lastPlayOff = '';
             ]);
             ?>
             <tr>
-                <td colspan="5" class="info">
-                    Group: <?= $mr->getGroup()->getLabel() ?>. <a href="<?= $groupMatchesUrl ?>">See matches</a>
+                <td colspan="5" class="bg-primary">
+                    Group: <?= $mr->getGroup()->getLabel() ?> <a href="<?= $groupMatchesUrl ?>" class="label label-primary">See matches</a>
                 </td>
             </tr>
             <?php $lastGroup = $mr->getGroup();

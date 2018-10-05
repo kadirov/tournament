@@ -10,11 +10,13 @@ $this->title = 'My Yii Application';
         <h1>Tournament (like FIFA world cup)</h1>
 
         <p class="lead">
-            This example project of using design patterns like "Dependency Injection", "Stage", "Memento", "Builder", "ORM", "MVC" e.t.c.
+            This example project of using design patterns like "Dependency Injection", "Stage", "Memento", "Builder",
+            "ORM", "MVC" e.t.c.
             I tried to adhere SOLID principles
         </p>
 
-        <p><a class="btn btn-lg btn-primary" href="https://github.com/kadirov/tournament" target="_blank">See the code on Github</a></p>
+        <p><a class="btn btn-lg btn-success" href="https://github.com/kadirov/tournament" target="_blank">See the code
+                on Github</a></p>
     </div>
 
     <div class="body-content">
@@ -23,15 +25,15 @@ $this->title = 'My Yii Application';
             <div class="col-lg-4">
                 <h2>LinkedIn</h2>
 
-                <p>My linkedIn profile</p>
-
-                <p><a class="btn btn-default" href="https://www.linkedin.com/in/kadirov/" target="_blank">LinkedIn &raquo;</a></p>
+                <p>I am Akmal Kadirov</p>
+                <p>I like creating web applications, games for Android OS and playing on Guitar ;)</p>
             </div>
             <div class="col-lg-4">
                 <h2>CV</h2>
 
                 <p>
-                    I have more than 12 years of programming experience. In the main they are PHP and JavaScript languages. Besides I have worked with languages as Java and C.
+                    I have more than 12 years of programming experience. In the main they are PHP and JavaScript
+                    languages. Besides I have worked with languages as Java and C.
                 </p>
 
                 <p>
@@ -39,10 +41,8 @@ $this->title = 'My Yii Application';
                 </p>
 
                 <p>
-                    I have created my own programming language. It was object oriented.
+                    I have created my own object oriented programming language.
                 </p>
-
-                <p><a class="btn btn-default" href="http://cv.kadirov.org" target="_blank">Full CV &raquo;</a></p>
             </div>
             <div class="col-lg-4">
                 <h2>My Contacts</h2>
@@ -52,8 +52,21 @@ $this->title = 'My Yii Application';
                     Skype: kadirov.uz<br>
                     Em@il: akmal@kadirov.org<br>
                 </p>
-
-                <p><a class="btn btn-default" href="mailto:akmal@kadirov.org">Mail me &raquo;</a></p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4">
+                <p>
+                    <a class="btn btn-primary" href="https://www.linkedin.com/in/kadirov/" target="_blank">
+                        LinkedIn &raquo;
+                    </a>
+                </p>
+            </div>
+            <div class="col-lg-4">
+                <p><a class="btn btn-primary" href="http://cv.kadirov.org" target="_blank">Full CV &raquo;</a></p>
+            </div>
+            <div class="col-lg-4">
+                <p><a class="btn btn-primary" href="mailto:akmal@kadirov.org">Mail me &raquo;</a></p>
             </div>
         </div>
 

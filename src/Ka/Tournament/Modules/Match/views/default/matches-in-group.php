@@ -7,6 +7,14 @@
  */
 
 use Ka\Tournament\Modules\Common\Interfaces\Match\Models\MatchResultInterface;
+use yii\helpers\Url;
+
+$this->params['breadcrumbs'][] = [
+    'label' => 'All Matches',
+    'url' => Url::to('/match'),
+];
+
+$this->params['breadcrumbs'][] = 'Matches in group';
 
 ?>
 

@@ -7,6 +7,8 @@
 use Ka\Tournament\Modules\Common\Interfaces\Group\Models\GroupResultInterface;
 use yii\helpers\Url;
 
+$this->params['breadcrumbs'][] = 'Groups';
+
 ?>
 <div class="group-default-index">
     <h1>Groups</h1>
@@ -21,12 +23,12 @@ use yii\helpers\Url;
                 ]);
                 print 'Group: ';
                 print $groupsResults[0]->getGroup()->getLabel();
-                print '. <a href="' . $groupMatchesUrl . '">See matches</a>';
+                print ' <a href="' . $groupMatchesUrl . '" class="label label-success">See matches</a>';
             }
             ?>
         </p>
-        <table class="table table-striped">
-            <tr>
+        <table class="table table-bordered">
+            <tr class="bg-primary">
                 <th>P</th>
                 <th width="200">Team</th>
                 <th>Played</th>

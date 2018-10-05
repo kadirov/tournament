@@ -7,6 +7,7 @@
 
 use Ka\Tournament\Modules\Common\Interfaces\Match\Models\MatchResultInterface;
 
+$this->params['breadcrumbs'][] = 'All Matches';
 ?>
 
 <div class="match-default-index">
