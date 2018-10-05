@@ -16,5 +16,9 @@ interface MatchResultBuilderInterface
      * @param MatchResultBuilderStrategy $strategy
      * @return MatchResultInterface
      */
-    public function build(TeamInterface $team1, TeamInterface $team2, MatchResultBuilderStrategy $strategy): MatchResultInterface;
+    public function build(
+        TeamInterface $team1,
+        TeamInterface $team2,
+        MatchResultBuilderStrategy $strategy
+    ): MatchResultInterface;
 }

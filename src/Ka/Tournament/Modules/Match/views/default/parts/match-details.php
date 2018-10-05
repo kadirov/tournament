@@ -56,7 +56,7 @@ $lastPlayOff = '';
             <th width="48%">
                 <?= $mr->getTeam1()->getName() ?>
                 <span class="text-muted text-info" style="font-weight: normal">
-                    <?= $mr->getPenaltiesScore() === null ? '' : '<br>Penalties'?>
+                    <?= $mr->getPenaltiesScore() === null ? '' : '<br>Penalties' ?>
                     <?= $mr->getAdditionalTimesScore() === null ? '' : '<br>Additional times result<br>Second time result' ?>
                 </span>
             </th>

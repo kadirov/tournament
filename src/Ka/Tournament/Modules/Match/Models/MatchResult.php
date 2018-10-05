@@ -61,7 +61,7 @@ class MatchResult extends ActiveRecord implements MatchResultInterface
     }
 
     /**
-     * @param \Ka\Tournament\Modules\Common\Interfaces\Match\Models\ScoreInterface $score
+     * @param ScoreInterface $score
      * @return MatchResult
      */
     public function setAdditionalScore(ScoreInterface $score): self
@@ -71,7 +71,7 @@ class MatchResult extends ActiveRecord implements MatchResultInterface
     }
 
     /**
-     * @param \Ka\Tournament\Modules\Common\Interfaces\Match\Models\ScoreInterface $score
+     * @param ScoreInterface $score
      * @return MatchResult
      */
     public function setPenaltiesScore(ScoreInterface $score): self
@@ -81,7 +81,7 @@ class MatchResult extends ActiveRecord implements MatchResultInterface
     }
 
     /**
-     * @param \Ka\Tournament\Modules\Common\Interfaces\Match\Models\ScoreInterface $score
+     * @param ScoreInterface $score
      * @return MatchResult
      */
     public function setSecondTimeScore(ScoreInterface $score): self

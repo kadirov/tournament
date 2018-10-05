@@ -10,7 +10,7 @@ class PlayOffForThirdPlaceStage implements TournamentStateInterface
 {
     /**
      * Change state of tournament
-     * @param \Ka\Tournament\Modules\Common\Interfaces\Tournament\TournamentInterface $tournament
+     * @param TournamentInterface $tournament
      */
     public function toNextRound(TournamentInterface $tournament): void
     {

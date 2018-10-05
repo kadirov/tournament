@@ -2,8 +2,6 @@
 
 namespace Ka\Tournament\Modules\Tournament\Controllers;
 
-use Ka\Tournament\Modules\Common\Interfaces\Group\GroupManagerInterface;
-use Ka\Tournament\Modules\Common\Interfaces\Match\MatchResultManagerInterface;
 use Ka\Tournament\Modules\Common\Interfaces\Tournament\Memento\TournamentCaretakerInterface;
 use Ka\Tournament\Modules\Common\Interfaces\Tournament\TournamentInterface;
 use yii\base\Module;
@@ -29,7 +27,7 @@ class DefaultController extends Controller
      * DefaultController constructor.
      * @param string $id
      * @param Module $module
-     * @param \Ka\Tournament\Modules\Common\Interfaces\Tournament\TournamentInterface $tournament
+     * @param TournamentInterface $tournament
      * @param TournamentCaretakerInterface $tournamentCaretaker
      */
     public function __construct(
@@ -37,8 +35,7 @@ class DefaultController extends Controller
         Module $module,
         TournamentInterface $tournament,
         TournamentCaretakerInterface $tournamentCaretaker
-    )
-    {
+    ) {
         $this->tournament = $tournament;
 
         parent::__construct($id, $module);
@@ -48,7 +45,7 @@ class DefaultController extends Controller
     /**
      * @return Response
      */
-    public function actionNext()
+    public function actionNext(): Response
     {
         $this->getTournamentCaretaker()->load($this->getTournament());
         $this->getTournament()->playRound();
@@ -70,7 +67,7 @@ class DefaultController extends Controller
     }
 
     /**
-     * @return \Ka\Tournament\Modules\Common\Interfaces\Tournament\TournamentInterface
+     * @return TournamentInterface
      */
     private function getTournament(): TournamentInterface
     {

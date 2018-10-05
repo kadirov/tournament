@@ -16,7 +16,6 @@ use Ka\Tournament\Modules\Match\Components\MatchBuilderStrategies\PlayOffStrateg
 use Ka\Tournament\Modules\Match\Components\MatchResultBuilder;
 use Ka\Tournament\Modules\Match\Components\MatchResultManager;
 use Ka\Tournament\Modules\PlayOff\Models\PlayOff;
-use yii\helpers\VarDumper;
 
 class PlayOffGames implements PlayOffGamesInterface
 {
@@ -184,29 +183,6 @@ class PlayOffGames implements PlayOffGamesInterface
     private function play(TeamInterface $team1, TeamInterface $team2): MatchResultInterface
     {
         $matchResult = $this->getMatchResultBuilder()->build($team1, $team2, $this->getStrategy());
-
-        print $team1->getName() . '<br>';
-        print $team2->getName() . '<br>';
-
-        print $matchResult->getFinalScore()->getFirstTeamScore() . ' : ';
-        print $matchResult->getFinalScore()->getSecondTeamScore() . '<br>';
-
-        if ($matchResult->getAdditionalTimesScore()) {
-            print 'ad<br>';
-            print $matchResult->getAdditionalTimesScore()->getFirstTeamScore() . ' : ';
-            print $matchResult->getAdditionalTimesScore()->getSecondTeamScore() . '<br>';
-        }
-
-        if ($matchResult->getPenaltiesScore()) {
-            print 'pen<br>';
-            print $matchResult->getPenaltiesScore()->getFirstTeamScore() . ' : ';
-            print $matchResult->getPenaltiesScore()->getSecondTeamScore() . '<br>';
-        }
-
-        print '<br>';
-        print '---';
-        print '<br>';
-
         $this->getMatchResultManager()->save($matchResult);
         return $matchResult;
     }
