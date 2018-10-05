@@ -6,9 +6,11 @@ use Ka\Tournament\Modules\Common\Constants\TournamentState;
 use Ka\Tournament\Modules\Common\Interfaces\Group\GroupGamesInterface;
 use Ka\Tournament\Modules\Common\Interfaces\Group\GroupManagerInterface;
 use Ka\Tournament\Modules\Common\Interfaces\Match\MatchResultBuilderInterface;
+use Ka\Tournament\Modules\Common\Interfaces\Match\MatchResultBuilderStrategy;
 use Ka\Tournament\Modules\Common\Interfaces\Match\MatchResultManagerInterface;
 use Ka\Tournament\Modules\Common\Interfaces\Team\Models\TeamInterface;
 use Ka\Tournament\Modules\Common\Interfaces\Tournament\TournamentStateInterface;
+use Ka\Tournament\Modules\Match\Components\MatchBuilderStrategies\GroupStrategy;
 
 class GroupGames implements GroupGamesInterface
 {
@@ -26,6 +28,11 @@ class GroupGames implements GroupGamesInterface
      * @var MatchResultManagerInterface
      */
     private $matchResultManager;
+
+    /**
+     * @var GroupStrategy
+     */
+    private $strategy;
 
     /**
      * GroupGames constructor.
@@ -76,12 +83,24 @@ class GroupGames implements GroupGamesInterface
     }
 
     /**
+     * @return MatchResultBuilderStrategy
+     */
+    private function getStrategy(): MatchResultBuilderStrategy
+    {
+        if ($this->strategy === null) {
+            $this->strategy = new GroupStrategy();
+        }
+
+        return $this->strategy;
+    }
+
+    /**
      * @param TeamInterface $team1
      * @param TeamInterface $team2
      */
     private function play(TeamInterface $team1, TeamInterface $team2): void
     {
-        $matchResult = $this->getMatchResultBuilder()->build($team1, $team2);
+        $matchResult = $this->getMatchResultBuilder()->build($team1, $team2, $this->getStrategy());
         $this->getMatchResultManager()->save($matchResult);
     }
 

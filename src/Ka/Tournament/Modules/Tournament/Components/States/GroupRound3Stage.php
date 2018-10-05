@@ -14,7 +14,7 @@ class GroupRound3Stage implements TournamentStateInterface
      */
     public function toNextRound(TournamentInterface $tournament): void
     {
-        $tournament->setState(new PlayOffPrepare());
+        $tournament->setState(new PlayOffPrepareStage());
     }
 
     /**

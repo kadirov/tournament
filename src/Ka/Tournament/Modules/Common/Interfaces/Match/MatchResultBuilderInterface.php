@@ -10,11 +10,11 @@ interface MatchResultBuilderInterface
     /**
      * Generate and return {@see MatchResultInterface}
      *
-     * @see \Ka\Tournament\Modules\Common\Interfaces\Match\Models\MatchResultInterface
+     * @see MatchResultInterface
      * @param TeamInterface $team1
      * @param TeamInterface $team2
-     * @param bool $drawAllowed
-     * @return \Ka\Tournament\Modules\Common\Interfaces\Match\Models\MatchResultInterface
+     * @param MatchResultBuilderStrategy $strategy
+     * @return MatchResultInterface
      */
-    public function build(TeamInterface $team1, TeamInterface $team2, bool $drawAllowed = true): MatchResultInterface;
+    public function build(TeamInterface $team1, TeamInterface $team2, MatchResultBuilderStrategy $strategy): MatchResultInterface;
 }

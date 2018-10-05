@@ -3,6 +3,7 @@
 namespace Ka\Tournament\Modules\Match\Components;
 
 use Ka\Tournament\Modules\Common\Interfaces\Match\MatchResultBuilderInterface;
+use Ka\Tournament\Modules\Common\Interfaces\Match\MatchResultBuilderStrategy;
 use Ka\Tournament\Modules\Common\Interfaces\Match\Models\MatchResultInterface;
 use Ka\Tournament\Modules\Common\Interfaces\Match\Models\ScoreInterface;
 use Ka\Tournament\Modules\Common\Interfaces\Match\ScoreGeneratorInterface;
@@ -10,7 +11,6 @@ use Ka\Tournament\Modules\Common\Interfaces\Match\ScoreManagerInterface;
 use Ka\Tournament\Modules\Common\Interfaces\Team\Models\TeamInterface;
 use Ka\Tournament\Modules\Match\Models\MatchResult;
 use Ka\Tournament\Modules\Match\Models\Score;
-use phpDocumentor\Reflection\Types\This;
 
 class MatchResultBuilder implements MatchResultBuilderInterface
 {
@@ -44,80 +44,115 @@ class MatchResultBuilder implements MatchResultBuilderInterface
      * @see MatchResultInterface
      * @param TeamInterface $team1
      * @param TeamInterface $team2
-     * @param bool $drawAllowed
+     * @param MatchResultBuilderStrategy $strategy
      * @return MatchResultInterface
      */
-    public function build(TeamInterface $team1, TeamInterface $team2, bool $drawAllowed = true): MatchResultInterface
-    {
-        $power1 = $team1->getPower() + $this->fortune();
-        $power2 = $team2->getPower() + $this->fortune();
+    public function build(
+        TeamInterface $team1,
+        TeamInterface $team2,
+        MatchResultBuilderStrategy $strategy
+    ): MatchResultInterface {
+        $power1 = $this->calcPower($team1);
+        $power2 = $this->calcPower($team2);
 
         $matchResult = new MatchResult();
         $matchResult->setTeam1($team1);
         $matchResult->setTeam2($team2);
 
         if ($power1 > $power2) {
-            return $this->doFirstTeamWin($matchResult);
+            return $this->doFirstTeamWin($matchResult, $strategy);
         }
 
         if ($power1 < $power2) {
-            return $this->doSecondTeamWin($matchResult);
+            return $this->doSecondTeamWin($matchResult, $strategy);
         }
 
-        $drawScore = $this->getScoreGenerator()->draw();
+        $drawScore = $this->getScoreGenerator()->draw($strategy->getMinScore(), $strategy->getMaxScore());
+
         $matchResult->setSecondTimeScore($drawScore);
 
-        if ($drawAllowed) {
+        if ($strategy->isDrawAllowed()) {
             $matchResult->setFinalScore($drawScore);
             return $matchResult;
         }
 
-        return $this->doAdditionalTimesAndPenalties($matchResult);
+        return $this->doAdditionalTimesAndPenalties($matchResult, $strategy);
     }
 
     /**
-     * @todo create scenario pattern for Score and set for additional times 2 goals maximum
      * @param MatchResultInterface|MatchResult $matchResult
+     * @param MatchResultBuilderStrategy $strategy
      * @return MatchResult
      */
     private function doAdditionalTimesAndPenalties(
-        MatchResultInterface $matchResult
+        MatchResultInterface $matchResult,
+        MatchResultBuilderStrategy $strategy
     ): MatchResultInterface {
-        $additionalTime = $this->build($matchResult->getTeam1(), $matchResult->getTeam2(), true);
-        $matchResult->setAdditionalScore($additionalTime->getFinalScore());
+        $power1 = $this->calcPower($matchResult->getTeam1());
+        $power2 = $this->calcPower($matchResult->getTeam2());
+
+        if ($power1 > $power2) {
+            $score = $this->getScoreGenerator()->winFirstTeam(
+                $strategy->getAdditionalTimesStrategy()->getMinScore(),
+                $strategy->getAdditionalTimesStrategy()->getMaxScore()
+            );
+        } elseif ($power1 < $power2) {
+            $score = $this->getScoreGenerator()->winSecondTeam(
+                $strategy->getAdditionalTimesStrategy()->getMinScore(),
+                $strategy->getAdditionalTimesStrategy()->getMaxScore()
+            );
+        } else {
+            $score = $this->getScoreGenerator()->draw(
+                $strategy->getAdditionalTimesStrategy()->getMinScore(),
+                $strategy->getAdditionalTimesStrategy()->getMaxScore()
+            );
+        }
+
+        $matchResult->setAdditionalScore($score);
 
         $finalScore = new Score();
 
-        $finalScore->setFirstTeamScore($this->sumOfFirstTeamScores($matchResult->getSecondTimeScore(), $additionalTime->getFinalScore()));
-        $finalScore->setSecondTeamScore($this->sumOfSecondTeamScores($matchResult->getSecondTimeScore(), $additionalTime->getFinalScore()));
+        $finalScore->setFirstTeamScore(
+            $this->sumOfFirstTeamScores($matchResult->getSecondTimeScore(), $score)
+        );
+
+        $finalScore->setSecondTeamScore(
+            $this->sumOfSecondTeamScores($matchResult->getSecondTimeScore(), $score)
+        );
 
         $this->getScoreManager()->save($finalScore);
 
         $matchResult->setFinalScore($finalScore);
 
-        if (!$additionalTime->isDraw()) {
+        if (!$matchResult->isDraw()) {
             return $matchResult;
         }
 
-        return $this->doPenalties($matchResult);
+        return $this->doPenalties($matchResult, $strategy);
     }
 
     /**
-     * @todo create scenario pattern for Score and set for penalties 1 goal different between teams
      * @param MatchResultInterface|MatchResult $matchResult
+     * @param MatchResultBuilderStrategy $strategy
      * @return MatchResultInterface
      */
-    private function doPenalties(MatchResultInterface $matchResult): MatchResultInterface
-    {
-        while (true) {
-            $penalties = $this->build($matchResult->getTeam1(), $matchResult->getTeam2(), false);
-
-            if (!$penalties->isDraw()) {
-                break;
-            }
+    private function doPenalties(
+        MatchResultInterface $matchResult,
+        MatchResultBuilderStrategy $strategy
+    ): MatchResultInterface {
+        if (\random_int(1, 2) === 1) {
+            $score = $this->getScoreGenerator()->winFirstTeam(
+                $strategy->getPenaltiesStrategy()->getMinScore(),
+                $strategy->getPenaltiesStrategy()->getMaxScore()
+            );
+        } else {
+            $score = $this->getScoreGenerator()->winSecondTeam(
+                $strategy->getPenaltiesStrategy()->getMinScore(),
+                $strategy->getPenaltiesStrategy()->getMaxScore()
+            );
         }
 
-        $matchResult->setPenaltiesScore($penalties->getFinalScore());
+        $matchResult->setPenaltiesScore($score);
 
         return $matchResult;
     }
@@ -156,11 +191,14 @@ class MatchResultBuilder implements MatchResultBuilderInterface
 
     /**
      * @param MatchResultInterface|MatchResult $matchResult
+     * @param MatchResultBuilderStrategy $strategy
      * @return MatchResultInterface
      */
-    private function doFirstTeamWin(MatchResultInterface $matchResult): MatchResultInterface
-    {
-        $score = $this->getScoreGenerator()->winFirstTeam();
+    private function doFirstTeamWin(
+        MatchResultInterface $matchResult,
+        MatchResultBuilderStrategy $strategy
+    ): MatchResultInterface {
+        $score = $this->getScoreGenerator()->winFirstTeam($strategy->getMinScore(), $strategy->getMaxScore());
         $matchResult->setSecondTimeScore($score);
         $matchResult->setFinalScore($score);
         return $matchResult;
@@ -168,15 +206,17 @@ class MatchResultBuilder implements MatchResultBuilderInterface
 
     /**
      * @param MatchResultInterface|MatchResult $matchResult
+     * @param MatchResultBuilderStrategy $strategy
      * @return MatchResultInterface
      */
-    private function doSecondTeamWin(MatchResultInterface $matchResult): MatchResultInterface
-    {
-        $score = $this->getScoreGenerator()->winSecondTeam();
+    private function doSecondTeamWin(
+        MatchResultInterface $matchResult,
+        MatchResultBuilderStrategy $strategy
+    ): MatchResultInterface {
+        $score = $this->getScoreGenerator()->winSecondTeam($strategy->getMinScore(), $strategy->getMaxScore());
         $matchResult->setSecondTimeScore($score);
         $matchResult->setFinalScore($score);
         return $matchResult;
-
     }
 
     /**
@@ -193,5 +233,10 @@ class MatchResultBuilder implements MatchResultBuilderInterface
     private function getScoreManager(): ScoreManagerInterface
     {
         return $this->scoreManager;
+    }
+
+    private function calcPower(TeamInterface $team): int
+    {
+        return $team->getPower() + $this->fortune();
     }
 }

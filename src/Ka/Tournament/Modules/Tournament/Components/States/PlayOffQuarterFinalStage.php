@@ -6,7 +6,7 @@ use Ka\Tournament\Modules\Common\Constants\TournamentState;
 use Ka\Tournament\Modules\Common\Interfaces\Tournament\TournamentInterface;
 use Ka\Tournament\Modules\Common\Interfaces\Tournament\TournamentStateInterface;
 
-class PlayOffQuarterFinal implements TournamentStateInterface
+class PlayOffQuarterFinalStage implements TournamentStateInterface
 {
     /**
      * Change state of tournament

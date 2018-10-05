@@ -30,14 +30,28 @@ $this->title = 'My Yii Application';
             <div class="col-lg-4">
                 <h2>CV</h2>
 
-                <p>Link to My CV</p>
+                <p>
+                    I have more than 12 years of programming experience. In the main they are PHP and JavaScript languages. Besides I have worked with languages as Java and C.
+                </p>
 
-                <p><a class="btn btn-default" href="http://cv.kadirov.org" target="_blank">CV &raquo;</a></p>
+                <p>
+                    I have created applications for Android.
+                </p>
+
+                <p>
+                    I have created my own programming language. It was object oriented.
+                </p>
+
+                <p><a class="btn btn-default" href="http://cv.kadirov.org" target="_blank">Full CV &raquo;</a></p>
             </div>
             <div class="col-lg-4">
-                <h2>My Em@il</h2>
+                <h2>My Contacts</h2>
 
-                <p>akmal@kadirov.org</p>
+                <p>
+                    Telegram: +7 985 000-22-01<br>
+                    Skype: kadirov.uz<br>
+                    Em@il: akmal@kadirov.org<br>
+                </p>
 
                 <p><a class="btn btn-default" href="mailto:akmal@kadirov.org">Mail me &raquo;</a></p>
             </div>

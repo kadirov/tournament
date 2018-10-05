@@ -12,9 +12,11 @@ use Ka\Tournament\Modules\Common\Interfaces\PlayOff\PlayOffGamesInterface;
 use Ka\Tournament\Modules\Common\Interfaces\Team\Models\TeamInterface;
 use Ka\Tournament\Modules\Common\Interfaces\Team\TeamManagerInterface;
 use Ka\Tournament\Modules\Common\Interfaces\Tournament\TournamentStateInterface;
+use Ka\Tournament\Modules\Match\Components\MatchBuilderStrategies\PlayOffStrategy;
 use Ka\Tournament\Modules\Match\Components\MatchResultBuilder;
 use Ka\Tournament\Modules\Match\Components\MatchResultManager;
 use Ka\Tournament\Modules\PlayOff\Models\PlayOff;
+use yii\helpers\VarDumper;
 
 class PlayOffGames implements PlayOffGamesInterface
 {
@@ -37,6 +39,11 @@ class PlayOffGames implements PlayOffGamesInterface
      * @var TeamManagerInterface
      */
     private $teamManager;
+
+    /**
+     * @var PlayOffStrategy
+     */
+    private $strategy;
 
     /**
      * PlayOffGames constructor.
@@ -158,29 +165,42 @@ class PlayOffGames implements PlayOffGamesInterface
     }
 
     /**
+     * @return PlayOffStrategy
+     */
+    private function getStrategy(): PlayOffStrategy
+    {
+        if ($this->strategy === null) {
+            $this->strategy = new PlayOffStrategy();
+        }
+
+        return $this->strategy;
+    }
+
+    /**
      * @param TeamInterface $team1
      * @param TeamInterface $team2
      * @return MatchResultInterface
      */
     private function play(TeamInterface $team1, TeamInterface $team2): MatchResultInterface
     {
-        $matchResult = $this->getMatchResultBuilder()->build($team1, $team2, false);
+        $matchResult = $this->getMatchResultBuilder()->build($team1, $team2, $this->getStrategy());
 
         print $team1->getName() . '<br>';
         print $team2->getName() . '<br>';
-        print $matchResult->getFinalScore()->getFirstTeamScore()  . ' : ';
-        print $matchResult->getFinalScore()->getSecondTeamScore()  . '<br>';
+
+        print $matchResult->getFinalScore()->getFirstTeamScore() . ' : ';
+        print $matchResult->getFinalScore()->getSecondTeamScore() . '<br>';
 
         if ($matchResult->getAdditionalTimesScore()) {
             print 'ad<br>';
-            print $matchResult->getAdditionalTimesScore()->getFirstTeamScore()  . ' : ';
-            print $matchResult->getAdditionalTimesScore()->getSecondTeamScore()  . '<br>';
+            print $matchResult->getAdditionalTimesScore()->getFirstTeamScore() . ' : ';
+            print $matchResult->getAdditionalTimesScore()->getSecondTeamScore() . '<br>';
         }
 
         if ($matchResult->getPenaltiesScore()) {
             print 'pen<br>';
-            print $matchResult->getPenaltiesScore()->getFirstTeamScore()  . ' : ';
-            print $matchResult->getPenaltiesScore()->getSecondTeamScore()  . '<br>';
+            print $matchResult->getPenaltiesScore()->getFirstTeamScore() . ' : ';
+            print $matchResult->getPenaltiesScore()->getSecondTeamScore() . '<br>';
         }
 
         print '<br>';

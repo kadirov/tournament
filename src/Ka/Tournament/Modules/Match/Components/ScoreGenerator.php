@@ -10,11 +10,6 @@ use Ka\Tournament\Modules\Match\Models\Score;
 class ScoreGenerator implements ScoreGeneratorInterface
 {
     /**
-     * Max score
-     */
-    private const MAX_SCORE = 5;
-
-    /**
      * @var ScoreManagerInterface
      */
     private $scoreManager;
@@ -23,10 +18,7 @@ class ScoreGenerator implements ScoreGeneratorInterface
      * ScoreGenerator constructor.
      * @param ScoreManagerInterface $scoreManager
      */
-    public function __construct
-    (
-        ScoreManagerInterface $scoreManager
-    )
+    public function __construct(ScoreManagerInterface $scoreManager)
     {
         $this->scoreManager = $scoreManager;
     }
@@ -34,14 +26,16 @@ class ScoreGenerator implements ScoreGeneratorInterface
     /**
      * Generate score where first team is won
      *
+     * @param int $minScore
+     * @param int $maxScore
      * @return ScoreInterface
      */
-    public function winFirstTeam(): ScoreInterface
+    public function winFirstTeam(int $minScore, int $maxScore): ScoreInterface
     {
         $score = new Score();
 
-        $score->setFirstTeamScore($this->generateWinScore());
-        $score->setSecondTeamScore($this->generateLoseScore($score->getFirstTeamScore()));
+        $score->setFirstTeamScore($this->generateWinScore($minScore, $maxScore));
+        $score->setSecondTeamScore($this->generateLoseScore($minScore, $score->getFirstTeamScore()));
 
         $this->getScoreManager()->save($score);
 
@@ -51,14 +45,16 @@ class ScoreGenerator implements ScoreGeneratorInterface
     /**
      * Generate score where second team is won
      *
+     * @param int $minScore
+     * @param int $maxScore
      * @return ScoreInterface
      */
-    public function winSecondTeam(): ScoreInterface
+    public function winSecondTeam(int $minScore, int $maxScore): ScoreInterface
     {
         $score = new Score();
 
-        $score->setSecondTeamScore($this->generateWinScore());
-        $score->setFirstTeamScore($this->generateLoseScore($score->getSecondTeamScore()));
+        $score->setSecondTeamScore($this->generateWinScore($minScore, $maxScore));
+        $score->setFirstTeamScore($this->generateLoseScore($minScore, $score->getSecondTeamScore()));
 
         $this->getScoreManager()->save($score);
 
@@ -66,14 +62,15 @@ class ScoreGenerator implements ScoreGeneratorInterface
     }
 
     /**
+     * @param int $minScore
+     * @param int $maxScore
      * @return ScoreInterface
      */
-    public function draw(): ScoreInterface
+    public function draw(int $minScore, int $maxScore): ScoreInterface
     {
         $score = new Score();
 
-
-        $score->setFirstTeamScore($this->generateWinScore());
+        $score->setFirstTeamScore($this->generateWinScore($minScore, $maxScore));
         $score->setSecondTeamScore($score->getFirstTeamScore());
 
         $this->getScoreManager()->save($score);
@@ -82,20 +79,23 @@ class ScoreGenerator implements ScoreGeneratorInterface
     }
 
     /**
+     * @param int $minScore
+     * @param int $maxScore
      * @return int
      */
-    private function generateWinScore(): int
+    private function generateWinScore(int $minScore, int $maxScore): int
     {
-        return random_int(1, self::MAX_SCORE);
+        return random_int($minScore + 1, $maxScore);
     }
 
     /**
+     * @param int $minScore
      * @param int $winScore
      * @return int
      */
-    private function generateLoseScore(int $winScore): int
+    private function generateLoseScore(int $minScore, int $winScore): int
     {
-        return random_int(0, $winScore - 1);
+        return random_int($minScore, $winScore - 1);
     }
 
     /**

@@ -48,7 +48,7 @@ class DefaultController extends Controller
     /**
      * @return Response
      */
-    public function actionNext(): Response
+    public function actionNext()
     {
         $this->getTournamentCaretaker()->load($this->getTournament());
         $this->getTournament()->playRound();

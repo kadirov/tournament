@@ -14,7 +14,7 @@ class PlayOff16Stage implements TournamentStateInterface
      */
     public function toNextRound(TournamentInterface $tournament): void
     {
-        $tournament->setState(new PlayOffQuarterFinal());
+        $tournament->setState(new PlayOffQuarterFinalStage());
     }
 
     /**
