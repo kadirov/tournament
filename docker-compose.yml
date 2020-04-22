@@ -1,9 +1,35 @@
-version: '2'
+version: '3'
+
 services:
   php:
-    image: yiisoftware/yii2-php:7.1-apache
+    container_name: fifa_php
     volumes:
-      - ~/.composer-docker/cache:/root/.composer/cache:delegated
-      - ./:/app:delegated
+      - ./:/var/www/html
+      - ./docker/php/php.ini:/usr/local/etc/php/php.ini
+    build: ./docker/php
+    links:
+      - mysql
+
+  nginx:
+    container_name: fifa_nginx
+    image: nginx:1.17.8
+    volumes:
+      - ./docker/nginx/logs:/var/log/nginx
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+      - ./:/var/www/html
     ports:
-      - '8000:80'
+      - 8503:80
+    links:
+      - php
+
+  mysql:
+    image: mysql:8.0.19
+    container_name: fifa_mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DATABASE_PASSWORD}
+      - MYSQL_DATABASE=${DATABASE_NAME}
+    volumes:
+      - ./docker/mysql/conf.d/project.cnf:/etc/mysql/conf.d/project.cnf
+      - ./docker/mysql/db:/var/lib/mysql
+    ports:
+      - 127.0.0.1:3503:3306

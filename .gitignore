@@ -34,3 +34,7 @@ tests/_support/_generated
 
 # developers local config file
 /config/parts/developer.php
+
+# docker
+/docker/mysql/db
+/docker/nginx/logs
