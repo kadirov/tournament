@@ -23,7 +23,8 @@ services:
       - php
 
   mysql:
-    image: mysql:8.0.19
+    # image: mysql:8.0.19
+    image: mariadb:10.5.2
     container_name: fifa_mysql
     environment:
       - MYSQL_ROOT_PASSWORD=${DATABASE_PASSWORD}
